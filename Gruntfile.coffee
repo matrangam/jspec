@@ -1,10 +1,14 @@
 module.exports = (grunt) ->
+  grunt.loadNpmTasks("grunt-contrib-clean")
   grunt.loadNpmTasks("grunt-contrib-coffee")
   grunt.loadNpmTasks("grunt-coffeelint")
   grunt.loadNpmTasks("grunt-contrib-watch")
 
   grunt.initConfig(
     pkg: grunt.file.readJSON("package.json")
+
+    clean:
+      src: ["src/js/*"]
 
     coffee:
       compile:
