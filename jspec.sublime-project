@@ -6,8 +6,7 @@
       "file_exclude_patterns": [
         "*.sublime-workspace"
       ],
-      "folder_exclude_patterns":
-      [
+      "folder_exclude_patterns": [
         "node_modules",
         "src/js"
       ]
