@@ -5,6 +5,7 @@
   "author": "Daniel Pehrson",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "grunt": "~0.4.1"
+    "grunt": "~0.4.1",
+    "grunt-contrib-coffee": "~0.7.0"
   }
 }
