@@ -1,6 +1,7 @@
 module.exports = (grunt) ->
   grunt.loadNpmTasks("grunt-contrib-clean")
   grunt.loadNpmTasks("grunt-contrib-coffee")
+  grunt.loadNpmTasks("grunt-contrib-jshint")
   grunt.loadNpmTasks("grunt-coffeelint")
   grunt.loadNpmTasks("grunt-contrib-watch")
 
@@ -52,10 +53,15 @@ module.exports = (grunt) ->
           level: "warn"
       src: ["src/coffee/**/*.coffee"]
 
+    jshint:
+      options:
+        "-W004": true
+      src: ["src/js/**/*.js"]
+
     watch:
       scripts:
         files: ["src/coffee/**/*.coffee"]
-        tasks: ["coffeelint", "coffee"]
+        tasks: ["coffeelint", "coffee", "jshint"]
         options:
           spawn: false
   )
