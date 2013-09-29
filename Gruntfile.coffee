@@ -1,11 +1,12 @@
 module.exports = (grunt) ->
   grunt.loadNpmTasks("grunt-contrib-clean")
   grunt.loadNpmTasks("grunt-contrib-coffee")
+  grunt.loadNpmTasks("grunt-contrib-connect")
   grunt.loadNpmTasks("grunt-contrib-jshint")
   grunt.loadNpmTasks("grunt-coffeelint")
   grunt.loadNpmTasks("grunt-contrib-watch")
 
-  grunt.registerTask("default", ["coffeelint", "coffee", "jshint", "watch"])
+  grunt.registerTask("default", ["coffeelint", "coffee", "jshint", "connect", "watch"])
 
   grunt.initConfig(
     pkg: grunt.file.readJSON("package.json")
@@ -54,6 +55,12 @@ module.exports = (grunt) ->
         no_trailing_whitespace:
           level: "warn"
       src: ["src/coffee/**/*.coffee"]
+
+    connect:
+      server:
+        options:
+          port: 9001,
+          base: ["src/js/", "server/"]
 
     jshint:
       options:
