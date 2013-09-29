@@ -17,7 +17,7 @@
 
     ## Public Instance Methods
 
-    Execute: () => @_getBlock().apply(@_buildBlockDelegate())
+    Execute: (context) => @_getBlock().apply(@_buildBlockDelegate(context))
 
     GetDescription: () => @_description
 
@@ -28,14 +28,113 @@
 
     ## Protected Instance Methods
 
-    _buildBlockDelegate: () => new ExampleBlockDelegate()
+    _buildBlockDelegate: (context) => new ExampleBlockDelegate(context)
 
     _getBlock: () => @_block
 
   class ExampleBlockDelegate
+    ## Constructor
+
+    constructor: (context) ->
+      @_context = context
+
     ## Public Instance Methods
 
     expect: (testValue) => new Expectation(testValue).BuildAssertionDelegate()
+
+    get: (name) => @_getContext().GetVariableValue(name)
+
+    set: (name, block) =>
+      @_getContext().RegisterVariableBlock(name, block)
+      null
+
+    subject: (block) =>
+      if arguments.length is 0
+        @_getContext().GetSubject()
+      else
+        @_getContext().SetSubjectBlock(block)
+
+    ## Protected Instance Properties
+
+    _context: null
+
+    ## Protected Instance Methods
+
+    _getContext: () => @_context
+
+  class ExampleContext
+    ## Public Instance Methods
+
+    GetSubject: () => @_subject ?= @_getSubjectBlock().apply(@_getSubjectBlockDelegate())
+
+    GetVariableValue: (name) =>
+      variableBlock = @_getVariableBlocks()[name]
+
+      # TODO: Determine whether this should actually throw an error.
+      return undefined unless variableBlock?
+
+      unless variableBlock.evaluated
+        variableBlock.value = variableBlock.block.apply(@_getVariableBlockDelegate())
+        variableBlock.evaluated = true
+
+      variableBlock.value
+
+    RegisterVariableBlock: (name, block) =>
+      @_getVariableBlocks()[name] =
+        block: block
+        evaluated: false
+        value: undefined
+
+      null
+
+    SetSubjectBlock: (block) =>
+      @_subjectBlock = block
+      null
+
+    ## Protected Instance Properties
+
+    _subjectBlock: null
+    _subjectBlockDelegate: null
+    _variableBlockDelegate: null
+    _variableBlocks: null
+
+    ## Protected Instance Methods
+
+    _getSubjectBlock: () => @_subjectBlock
+
+    _getSubjectBlockDelegate: () => @_subjectBlockDelegate ?= new ExampleContextSubjectBlockDelegate(@GetVariableValue)
+
+    _getVariableBlockDelegate: () => @_variableBlockDelegate ?= new ExampleContextVariableBlockDelegate(@GetVariableValue)
+
+    _getVariableBlocks: () => @_variableBlocks ?= {}
+
+  class ExampleContextSubjectBlockDelegate
+    ## Constructor
+
+    constructor: (getter) ->
+      @_getter = getter
+
+    ## Public Instance Methods
+
+    get: (name) => @_getGetter()(name)
+
+    ## Protected Instance Properties
+
+    _getter: null
+
+    ## Protected Instance Methods
+
+    _getGetter: () => @_getter
+
+  class ExampleContextVariableBlockDelegate
+    ## Constructor
+
+    constructor: (getter) ->
+      @_getter = getter
+
+    ## Public Instance Methods
+
+    get: (name) => @_getter(name)
 
   class ExpectationError
     ## Constructor
@@ -120,6 +219,7 @@
 
   @jspec =
     Example: Example
+    ExampleContext: ExampleContext
     Expectation: Expectation
     ExpectationError: ExpectationError
 
