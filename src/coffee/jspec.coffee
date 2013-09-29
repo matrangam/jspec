@@ -220,7 +220,6 @@
   @jspec =
     Example: Example
     ExampleContext: ExampleContext
-    Expectation: Expectation
     ExpectationError: ExpectationError
 
   @jspec
