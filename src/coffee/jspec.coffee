@@ -35,7 +35,7 @@
   class ExampleBlockDelegate
     ## Public Instance Methods
 
-    expect: (testValue) => new Expectation(testValue).GetDelegate()
+    expect: (testValue) => new Expectation(testValue).GetAssertionDelegate()
 
   class ExpectationError
     ## Constructor
@@ -59,7 +59,7 @@
 
     ## Public Instance Methods
 
-    GetDelegate: () =>
+    GetAssertionDelegate: () =>
       NotToBeFalse: @NotToBeFalse
       NotToBeNull: @NotToBeNull
       NotToBeTrue: @NotToBeTrue
