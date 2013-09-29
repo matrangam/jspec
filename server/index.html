@@ -1,0 +1,76 @@
+<!DOCTYPE>
+<html>
+  <head>
+    <script src="/jspec.js"></script>
+  </head>
+  <body>
+    jspec
+    <script>
+      (function() {
+        var total = 0;
+        var failures = 0;
+        var successes = 0;
+
+        var expectations = [
+          [true, "NotToBeFalse", [], true],
+          [false, "NotToBeFalse", [], false],
+
+          [null, "NotToBeNull", [], false],
+          [undefined, "NotToBeNull", [], true],
+          ["foo", "NotToBeNull", [], true],
+
+          [true, "NotToBeTrue", [], false],
+          [false, "NotToBeTrue", [], true],
+
+          [null, "NotToBeUndefined", [], true],
+          [undefined, "NotToBeUndefined", [], false],
+          ["foo", "NotToBeUndefined", [], true],
+
+          [true, "ToBeFalse", [], false],
+          [false, "ToBeFalse", [], true],
+
+          [null, "ToBeNull", [], true],
+          [undefined, "ToBeNull", [], false],
+          ["foo", "ToBeNull", [], false],
+
+          [null, "ToBeUndefined", [], false],
+          [undefined, "ToBeUndefined", [], true],
+          ["foo", "ToBeUndefined", [], false],
+
+          [true, "ToBeTrue", [], true],
+          [false, "ToBeTrue", [], false]
+        ];
+
+        console.group("Expectation");
+        for (var i = 0; i < expectations.length; i++) {
+          var example = new jspec.Example(("Expect(" + expectations[i][0] + ")." + expectations[i][1] + "(" + expectations[i][2] + ")"), function() {
+            return this.expect(expectations[i][0])[expectations[i][1]].apply(null, expectations[i][2]);
+          });
+
+          var result = null;
+          try {
+            result = example.Execute()
+          }
+          catch(error) {
+            result = error;
+          }
+
+          var passed = ((typeof(result) == "boolean" && expectations[i][3] == true) || (result instanceof jspec.ExpectationError && expectations[i][3] == false));
+
+          total++;
+          if (!passed) {
+            failures++;
+          }
+          else {
+            successes++;
+          }
+
+          console.log((passed ? "+" : "-"), example.GetDescription(), result);
+        }
+        console.groupEnd();
+
+        console.log("Total:", total, "Failures:", failures, "Successes:", successes);
+      })();
+    </script>
+  </body>
+</html>
