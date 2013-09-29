@@ -59,9 +59,15 @@ module.exports = (grunt) ->
       src: ["src/js/**/*.js"]
 
     watch:
-      scripts:
+      coffee:
         files: ["src/coffee/**/*.coffee"]
         tasks: ["coffeelint", "coffee", "jshint"]
+        options:
+          spawn: false
+
+      js:
+        files: ["src/js/**/*.js"]
+        tasks: ["jshint"]
         options:
           spawn: false
   )
