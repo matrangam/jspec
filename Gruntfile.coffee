@@ -28,6 +28,8 @@ module.exports = (grunt) ->
           level: "error"
         indentation:
           level: "error"
+        max_line_length:
+          level: "ignore"
         no_backticks:
           level: "error"
         no_empty_param_list:
