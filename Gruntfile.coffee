@@ -64,7 +64,8 @@ module.exports = (grunt) ->
 
     jshint:
       options:
-        "-W004": true
+        "-W004": true # <class name> is already defined.
+        "-W041": true # Use '===' to compare with 'null'.
       src: ["src/js/**/*.js"]
 
     watch:
