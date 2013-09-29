@@ -5,6 +5,8 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks("grunt-coffeelint")
   grunt.loadNpmTasks("grunt-contrib-watch")
 
+  grunt.registerTask("default", ["coffeelint", "coffee", "jshint", "watch"])
+
   grunt.initConfig(
     pkg: grunt.file.readJSON("package.json")
 
