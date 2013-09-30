@@ -39,7 +39,7 @@
     ## Public Instance Methods
 
     expect: (testValue) =>
-      # TODO: Create and return a new AssertionDelegate(new Expectatio(testValue))
+      # TODO: Create and return a new AssertionDelegate(new Expectation(testValue))
       new Expectation(testValue).BuildAssertionDelegate()
 
     get: (name) => @_getContext().GetVariableValue(name)
