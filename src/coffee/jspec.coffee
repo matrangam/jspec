@@ -155,12 +155,31 @@
       throw new ExpectationError("Expected #{@_getTestValue()} not to be null") if @_getTestValue() is null
       true
 
+    NotToBeTrue: () =>
+      throw new ExpectationError("Expected #{@_getTestValue()} not to be true") if @_getTestValue() is true
+      true
+
     NotToBeUndefined: () =>
       throw new ExpectationError("Expected #{@_getTestValue()} not to be undefined") if @_getTestValue() is undefined
       true
 
-    NotToBeTrue: () =>
-      throw new ExpectationError("Expected #{@_getTestValue()} not to be true") if @_getTestValue() is true
+    NotToThrow: (unexpectedError = null) =>
+      thrownError = null
+
+      try
+        @_getTestValue()()
+      catch error
+        thrownError = error
+
+      displayError = if unexpectedError? then unexpectedError else "an error"
+
+      if thrownError?
+        if unexpectedError?
+          if thrownError.constructor is unexpectedError or unexpectedError is thrownError
+            throw new ExpectationError("Expected #{@_getTestValue()} not to throw #{displayError} but threw #{thrownError}")
+        else
+          throw new ExpectationError("Expected #{@_getTestValue()} not to throw #{displayError} but threw #{thrownError}")
+
       true
 
     ToBeFalse: () =>
@@ -171,12 +190,30 @@
       throw new ExpectationError("Expected #{@_getTestValue()} to be null") unless @_getTestValue() is null
       true
 
+    ToBeTrue: () =>
+      throw new ExpectationError("Expected #{@_getTestValue()} to be true") unless @_getTestValue() is true
+      true
+
     ToBeUndefined: () =>
       throw new ExpectationError("Expected #{@_getTestValue()} to be undefined") unless @_getTestValue() is undefined
       true
 
-    ToBeTrue: () =>
-      throw new ExpectationError("Expected #{@_getTestValue()} to be true") unless @_getTestValue() is true
+    ToThrow: (expectedError = null) =>
+      thrownError = null
+
+      try
+        @_getTestValue()()
+      catch error
+        thrownError = error
+
+      displayError = if expectedError? then expectedError else "an error"
+
+      unless thrownError?
+        throw new ExpectationError("Expected #{@_getTestValue()} to throw #{displayError} but did not throw an error")
+
+      if expectedError? and expectedError isnt thrownError.constructor and expectedError isnt thrownError
+        throw new ExpectationError("Expected #{@_getTestValue()} to throw #{displayError} but threw #{thrownError}")
+
       true
 
     ## Protected Instance Methods
@@ -193,11 +230,13 @@
       @not.to.be.null = @NotToBeNull
       @not.to.be.true = @NotToBeTrue
       @not.to.be.undefined = @NotToBeUndefined
+      @not.to.throw = @NotToThrow
 
       @to.be.false = @ToBeFalse
       @to.be.null = @ToBeNull
       @to.be.true = @ToBeTrue
       @to.be.undefined = @ToBeUndefined
+      @to.throw = @ToThrow
 
     NotToBeFalse: () => @_getExpectation().NotToBeFalse()
 
@@ -207,9 +246,13 @@
 
     NotToBeUndefined: () => @_getExpectation().NotToBeUndefined()
 
+    NotToThrow: (unexpectedError = null) => @_getExpectation().NotToThrow(unexpectedError)
+
     ToBeFalse: () => @_getExpectation().ToBeFalse()
 
     ToBeNull: () => @_getExpectation().ToBeNull()
+
+    ToThrow: (expectedError = null) => @_getExpectation().ToThrow(expectedError)
 
     ToBeTrue: () => @_getExpectation().ToBeTrue()
 
@@ -222,12 +265,15 @@
           null: null
           true: null
           undefined: null
+      throw: null
+
     to:
       be:
         false: null
         null: null
         true: null
         undefined: null
+      throw: null
 
     ## Protected Instance Properties
 
