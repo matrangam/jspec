@@ -136,16 +136,6 @@
 
     get: (name) => @_getter(name)
 
-  class ExpectationError
-    ## Constructor
-
-    constructor: (message) ->
-      @_message = message
-
-    ## Public Instance Methods
-
-    GetMessage: () => @_message
-
   class Expectation
     ## Constructor
 
@@ -216,6 +206,16 @@
     ## Protected Instance Methods
 
     _getTestValue: () => @_testValue
+
+  class ExpectationError
+    ## Constructor
+
+    constructor: (message) ->
+      @_message = message
+
+    ## Public Instance Methods
+
+    GetMessage: () => @_message
 
   @jspec =
     Example: Example
