@@ -304,43 +304,12 @@
 
     ## Public Instance Methods
 
+    GetExamples: () => @_examples ?= []
+
+    GetName: () => @_name
+
     Run: () =>
-      console.group(@_getName())
-
-      total = 0
-      failures = 0
-      successes = 0
-
-      displayResult = (r) ->
-        switch
-          when r instanceof ExpectationError then r.GetMessage()
-          when r instanceof Error then r.message
-          else r
-
-      for example in @_getExamples()
-        result = null
-        try
-          example.Execute(new ExampleContext())
-          passed = true
-        catch error
-          result = error
-          passed = false
-
-        total++
-        if passed
-          successes++
-        else
-          failures++
-
-        console.log(
-          (if passed then "+" else "-")
-          example.GetDescription()
-          displayResult(result)
-        )
-
-      console.groupEnd()
-
-      console.log("Total:", total, "Failures:", failures, "Successes:", successes)
+      new SuiteRunner(@).Run()
 
       null
 
@@ -355,12 +324,8 @@
 
     _getBlockScope: () => @_blockScope ?= new SuiteBlockScope(@_registerExample)
 
-    _getExamples: () => @_examples ?= []
-
-    _getName: () => @_name
-
     _registerExample: (description, block) =>
-      @_getExamples().push(new Example(description, block))
+      @GetExamples().push(new Example(description, block))
       null
 
   class SuiteBlockScope
@@ -387,6 +352,57 @@
     Expectation: Expectation
     ExpectationError: ExpectationError
     Suite: Suite
+
+  class SuiteRunner
+    ## Constructor
+
+    constructor: (suite) ->
+      @_exampleData = []
+      for example in suite.GetExamples()
+        @_exampleData.push(
+          path: [suite.GetName()]
+          example: example
+        )
+
+    ## Public Instance Methods
+
+    Run: () =>
+      total = 0
+      failures = 0
+      successes = 0
+
+      displayResult = (r) ->
+        switch
+          when r instanceof ExpectationError then r.GetMessage()
+          when r instanceof Error then r.message
+          else r
+
+      for exampleDatum in @_getExampleData()
+        result = null
+        try
+          exampleDatum.example.Execute(new ExampleContext())
+          passed = true
+        catch error
+          result = error
+          passed = false
+
+        total++
+        if passed
+          successes++
+        else
+          failures++
+
+        console.log(
+          (if passed then "+" else "-")
+          [exampleDatum.path, exampleDatum.example.GetDescription()].join(" ")
+          displayResult(result)
+        )
+
+      console.log("Total:", total, "Failures:", failures, "Successes:", successes)
+
+    ## Protected Instance Methods
+
+    _getExampleData: () => @_exampleData
 
   @jspec
 )
