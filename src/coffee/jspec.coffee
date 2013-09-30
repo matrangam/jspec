@@ -296,15 +296,16 @@
   class Suite
     ## Constructor
 
-    constructor: (block) ->
+    constructor: (name, block) ->
       @_block = block
+      @_name = name
 
       @_block.apply(@_getBlockScope())
 
     ## Public Instance Methods
 
     Run: () =>
-      console.group("Suite")
+      console.group(@_getName())
 
       total = 0
       failures = 0
@@ -345,14 +346,18 @@
 
     ## Protected Instance Properties
 
+    _block: null
     _blockScope: null
     _examples: null
+    _name: name
 
     ## Protected Instance Methods
 
     _getBlockScope: () => @_blockScope ?= new SuiteBlockScope(@_registerExample)
 
     _getExamples: () => @_examples ?= []
+
+    _getName: () => @_name
 
     _registerExample: (description, block) =>
       @_getExamples().push(new Example(description, block))
