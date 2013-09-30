@@ -53,6 +53,7 @@
         @_getContext().GetSubject()
       else
         @_getContext().SetSubjectBlock(block)
+        null
 
     ## Protected Instance Properties
 
