@@ -17,7 +17,7 @@
 
     ## Public Instance Methods
 
-    Execute: (context) => @_getBlock().apply(new ExampleBlockDelegate(context))
+    Execute: (context) => @_getBlock().apply(new ExampleBlockScope(context))
 
     GetDescription: () => @_description
 
@@ -30,7 +30,7 @@
 
     _getBlock: () => @_block
 
-  class ExampleBlockDelegate
+  class ExampleBlockScope
     ## Constructor
 
     constructor: (context) ->
