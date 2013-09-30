@@ -315,15 +315,42 @@
           // ToThrow
 
           this.example("Expectation::ToThrow when test value doesnt throw an error and an expected error is not provided should throw an ExpectationError", function() {
-            this.expect(function() { new jspec.Expectation(function() { null; }).ToThrow(); }).ToThrow(jspec.ExpectationError);
+            thrownError = null
+
+            try {
+              new jspec.Expectation(function() { null; }).ToThrow();
+            }
+            catch (error) {
+              thrownError = error;
+            }
+
+            this.expect(thrownError instanceof jspec.ExpectationError).ToBeTrue();
           });
 
           this.example("Expectation::ToThrow when test value doesnt throw an error and an expected error is provided a constructor should throw an ExpectationError", function() {
-            this.expect(function() { new jspec.Expectation(function() { null; }).ToThrow(Error); }).ToThrow(jspec.ExpectationError);
+            thrownError = null
+
+            try {
+              new jspec.Expectation(function() { null; }).ToThrow(Error);
+            }
+            catch (error) {
+              thrownError = error;
+            }
+
+            this.expect(thrownError instanceof jspec.ExpectationError).ToBeTrue();
           });
 
           this.example("Expectation::ToThrow when test value doesnt throw an error and an expected error is provided an error should throw an ExpectationError", function() {
-            this.expect(function() { new jspec.Expectation(function() { null; }).ToThrow(new Error()); }).ToThrow(jspec.ExpectationError);
+            thrownError = null
+
+            try {
+              new jspec.Expectation(function() { null; }).ToThrow(new Error());
+            }
+            catch (error) {
+              thrownError = error
+            }
+
+            this.expect(thrownError instanceof jspec.ExpectationError).ToBeTrue();
           });
         });
         suite.Run();
