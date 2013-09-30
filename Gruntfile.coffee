@@ -5,6 +5,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks("grunt-contrib-jshint")
   grunt.loadNpmTasks("grunt-coffeelint")
   grunt.loadNpmTasks("grunt-contrib-watch")
+  grunt.loadNpmTasks("grunt-rigger")
 
   grunt.registerTask("default", ["clean", "coffeelint", "coffee", "jshint", "connect", "watch"])
 
@@ -81,6 +82,11 @@ module.exports = (grunt) ->
         "-W041": true # Use '===' to compare with 'null'.
       spec: ["spec/js/**/*.js"]
       src: ["src/js/**/*.js"]
+
+    rig:
+      latest:
+        src: "src/coffee/jspec.coffee"
+        dest: "src/coffee/jspec-latest.coffee"
 
     watch:
       coffee:
