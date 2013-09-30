@@ -38,9 +38,7 @@
 
     ## Public Instance Methods
 
-    expect: (testValue) =>
-      # TODO: Create and return a new AssertionDelegate(new Expectation(testValue))
-      new Expectation(testValue).BuildAssertionDelegate()
+    expect: (testValue) => new ExpectationAssertionDelegate(new Expectation(testValue))
 
     get: (name) => @_getContext().GetVariableValue(name)
 
@@ -149,29 +147,6 @@
 
     ## Public Instance Methods
 
-    BuildAssertionDelegate: () =>
-      NotToBeFalse: @NotToBeFalse
-      NotToBeNull: @NotToBeNull
-      NotToBeTrue: @NotToBeTrue
-      NotToBeUndefined: @NotToBeUndefined
-      ToBeFalse: @ToBeFalse
-      ToBeNull: @ToBeNull
-      ToBeTrue: @ToBeTrue
-      ToBeUndefined: @ToBeUndefined
-      not:
-        to:
-          be:
-            false: @NotToBeFalse
-            null: @NotToBeNull
-            true: @NotToBeTrue
-            undefined: @NotToBeUndefined
-      to:
-        be:
-          false: @ToBeFalse
-          null: @ToBeNull
-          true: @ToBeTrue
-          undefined: @ToBeUndefined
-
     NotToBeFalse: () =>
       throw new ExpectationError("Expected #{@_getTestValue()} not to be false") if @_getTestValue() is false
       true
@@ -207,6 +182,60 @@
     ## Protected Instance Methods
 
     _getTestValue: () => @_testValue
+
+  class ExpectationAssertionDelegate
+    ## Constructor
+
+    constructor: (expectation) ->
+      @_expectation = expectation
+
+      @not.to.be.false = @NotToBeFalse
+      @not.to.be.null = @NotToBeNull
+      @not.to.be.true = @NotToBeTrue
+      @not.to.be.undefined = @NotToBeUndefined
+
+      @to.be.false = @ToBeFalse
+      @to.be.null = @ToBeNull
+      @to.be.true = @ToBeTrue
+      @to.be.undefined = @ToBeUndefined
+
+    NotToBeFalse: () => @_getExpectation().NotToBeFalse()
+
+    NotToBeNull: () => @_getExpectation().NotToBeNull()
+
+    NotToBeTrue: () => @_getExpectation().NotToBeTrue()
+
+    NotToBeUndefined: () => @_getExpectation().NotToBeUndefined()
+
+    ToBeFalse: () => @_getExpectation().ToBeFalse()
+
+    ToBeNull: () => @_getExpectation().ToBeNull()
+
+    ToBeTrue: () => @_getExpectation().ToBeTrue()
+
+    ToBeUndefined: () => @_getExpectation().ToBeUndefined()
+
+    not:
+      to:
+        be:
+          false: null
+          null: null
+          true: null
+          undefined: null
+    to:
+      be:
+        false: null
+        null: null
+        true: null
+        undefined: null
+
+    ## Protected Instance Properties
+
+    _expectation: null
+
+    ## Protected Instance Methods
+
+    _getExpectation: () => @_expectation
 
   class ExpectationError
     ## Constructor
