@@ -247,10 +247,94 @@
 
     GetMessage: () => @_message
 
+  class Suite
+    ## Constructor
+
+    constructor: (block) ->
+      @_block = block
+
+      @_block.apply(@_getBlockScope())
+
+    ## Public Instance Methods
+
+    Run: () =>
+      console.group("Suite")
+
+      total = 0
+      failures = 0
+      successes = 0
+
+      displayResult = (r) ->
+        switch
+          when r instanceof ExpectationError then r.GetMessage()
+          when r instanceof Error then r.message
+          else r
+
+      for example in @_getExamples()
+        result = null
+        try
+          example.Execute(new ExampleContext())
+          passed = true
+        catch error
+          result = error
+          passed = false
+
+        total++
+        if passed
+          successes++
+        else
+          failures++
+
+        console.log(
+          (if passed then "+" else "-")
+          example.GetDescription()
+          displayResult(result)
+        )
+
+      console.groupEnd()
+
+      console.log("Total:", total, "Failures:", failures, "Successes:", successes)
+
+      null
+
+    ## Protected Instance Properties
+
+    _blockScope: null
+    _examples: null
+
+    ## Protected Instance Methods
+
+    _getBlockScope: () => @_blockScope ?= new SuiteBlockScope(@_registerExample)
+
+    _getExamples: () => @_examples ?= []
+
+    _registerExample: (description, block) =>
+      @_getExamples().push(new Example(description, block))
+      null
+
+  class SuiteBlockScope
+    ## Constructor
+
+    constructor: (exampleRegisterer) ->
+      @_exampleRegisterer = exampleRegisterer
+
+    ## Public Instance Methods
+
+    example: (description, block) => @_getExampleRegisterer()(description, block)
+
+    ## Protected Instance Properties
+
+    _exampleRegisterer: null
+
+    ## Protected Instance Methods
+
+    _getExampleRegisterer: () => @_exampleRegisterer
+
   @jspec =
     Example: Example
     ExampleContext: ExampleContext
     ExpectationError: ExpectationError
+    Suite: Suite
 
   @jspec
 )
