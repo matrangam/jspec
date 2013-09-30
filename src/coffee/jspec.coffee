@@ -46,7 +46,7 @@
       @_getContext().RegisterVariableBlock(name, block)
       null
 
-    subject: (block) =>
+    subject: (block = null) =>
       if arguments.length is 0
         @_getContext().GetSubject()
       else
