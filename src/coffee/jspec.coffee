@@ -17,7 +17,7 @@
 
     ## Public Instance Methods
 
-    Execute: (context) => @_getBlock().apply(@_buildBlockDelegate(context))
+    Execute: (context) => @_getBlock().apply(new ExampleBlockDelegate(context))
 
     GetDescription: () => @_description
 
@@ -27,8 +27,6 @@
     _description: null
 
     ## Protected Instance Methods
-
-    _buildBlockDelegate: (context) => new ExampleBlockDelegate(context)
 
     _getBlock: () => @_block
 
