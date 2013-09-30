@@ -4,7 +4,9 @@
     {
       "path": ".",
       "file_exclude_patterns": [
-        "*.sublime-workspace"
+        "*.sublime-workspace",
+        "spec/coffee/jspecSuite-latest.coffee",
+        "src/coffee/jspec-latest.coffee"
       ],
       "folder_exclude_patterns": [
         "node_modules",

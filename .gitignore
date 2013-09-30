@@ -1,4 +1,7 @@
 # Build artifacts
+/spec/coffee/jspecSuite-latest.coffee
+
+# Build artifacts
 /src/coffee/jspec-latest.coffee
 
 # Javascript Source

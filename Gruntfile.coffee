@@ -18,11 +18,8 @@ module.exports = (grunt) ->
 
     coffee:
       spec:
-        expand: true
-        cwd: "spec/coffee/"
-        src: ["**/*.coffee"]
-        dest: "spec/js/"
-        ext: ".js"
+        files:
+          "spec/js/jspecSuite-latest.js": "spec/coffee/jspecSuite-latest.coffee"
 
       src:
         files:
@@ -81,7 +78,10 @@ module.exports = (grunt) ->
       src: ["src/js/**/*.js"]
 
     rig:
-      latest:
+      spec:
+        src: "spec/coffee/jspecSuite.coffee"
+        dest: "spec/coffee/jspecSuite-latest.coffee"
+      src:
         src: "src/coffee/jspec.coffee"
         dest: "src/coffee/jspec-latest.coffee"
 
