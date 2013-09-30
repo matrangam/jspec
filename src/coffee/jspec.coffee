@@ -66,7 +66,7 @@
   class ExampleContext
     ## Public Instance Methods
 
-    GetSubject: () => @_subject ?= @_getSubjectBlock().apply(@_getSubjectBlockDelegate())
+    GetSubject: () => @_subject ?= @_getSubjectBlock().apply(@_getSubjectBlockScope())
 
     GetVariableValue: (name) =>
       variableBlock = @_getVariableBlocks()[name]
@@ -75,7 +75,7 @@
       return undefined unless variableBlock?
 
       unless variableBlock.evaluated
-        variableBlock.value = variableBlock.block.apply(@_getVariableBlockDelegate())
+        variableBlock.value = variableBlock.block.apply(@_getVariableBlockScope())
         variableBlock.evaluated = true
 
       variableBlock.value
@@ -95,21 +95,21 @@
     ## Protected Instance Properties
 
     _subjectBlock: null
-    _subjectBlockDelegate: null
-    _variableBlockDelegate: null
+    _subjectBlockScope: null
     _variableBlocks: null
+    _variableBlockScope: null
 
     ## Protected Instance Methods
 
     _getSubjectBlock: () => @_subjectBlock
 
-    _getSubjectBlockDelegate: () => @_subjectBlockDelegate ?= new ExampleContextSubjectBlockDelegate(@GetVariableValue)
-
-    _getVariableBlockDelegate: () => @_variableBlockDelegate ?= new ExampleContextVariableBlockDelegate(@GetVariableValue)
+    _getSubjectBlockScope: () => @_subjectBlockScope ?= new ExampleContextSubjectBlockScope(@GetVariableValue)
 
     _getVariableBlocks: () => @_variableBlocks ?= {}
 
-  class ExampleContextSubjectBlockDelegate
+    _getVariableBlockScope: () => @_variableBlockScope ?= new ExampleContextVariableBlockScope(@GetVariableValue)
+
+  class ExampleContextSubjectBlockScope
     ## Constructor
 
     constructor: (getter) ->
@@ -127,7 +127,7 @@
 
     _getGetter: () => @_getter
 
-  class ExampleContextVariableBlockDelegate
+  class ExampleContextVariableBlockScope
     ## Constructor
 
     constructor: (getter) ->
