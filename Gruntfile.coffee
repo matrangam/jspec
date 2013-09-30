@@ -25,11 +25,8 @@ module.exports = (grunt) ->
         ext: ".js"
 
       src:
-        expand: true
-        cwd: "src/coffee/"
-        src: ["**/*.coffee"]
-        dest: "src/js/"
-        ext: ".js"
+        files:
+          "src/js/jspec-latest.js": "src/coffee/jspec-latest.coffee"
 
     coffeelint:
       options:
