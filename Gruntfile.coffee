@@ -6,16 +6,24 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks("grunt-coffeelint")
   grunt.loadNpmTasks("grunt-contrib-watch")
 
-  grunt.registerTask("default", ["coffeelint", "coffee", "jshint", "connect", "watch"])
+  grunt.registerTask("default", ["clean", "coffeelint", "coffee", "jshint", "connect", "watch"])
 
   grunt.initConfig(
     pkg: grunt.file.readJSON("package.json")
 
     clean:
+      spec: ["spec/js/*"]
       src: ["src/js/*"]
 
     coffee:
-      compile:
+      spec:
+        expand: true
+        cwd: "spec/coffee/"
+        src: ["**/*.coffee"]
+        dest: "spec/js/"
+        ext: ".js"
+
+      src:
         expand: true
         cwd: "src/coffee/"
         src: ["**/*.coffee"]
@@ -54,29 +62,41 @@ module.exports = (grunt) ->
           level: "error"
         no_trailing_whitespace:
           level: "warn"
+      spec: ["spec/coffee/**/*.coffee"]
       src: ["src/coffee/**/*.coffee"]
 
     connect:
       server:
         options:
           port: 9001,
-          base: ["src/js/", "server/"]
+          base: [
+            "server/"
+            "spec/js/"
+            "src/js/"
+          ]
 
     jshint:
       options:
         "-W004": true # <class name> is already defined.
         "-W041": true # Use '===' to compare with 'null'.
+      spec: ["spec/js/**/*.js"]
       src: ["src/js/**/*.js"]
 
     watch:
       coffee:
-        files: ["src/coffee/**/*.coffee"]
+        files: [
+          "spec/coffee/**/*.coffee"
+          "src/coffee/**/*.coffee"
+        ]
         tasks: ["coffeelint", "coffee", "jshint"]
         options:
           spawn: false
 
       js:
-        files: ["src/js/**/*.js"]
+        files: [
+          "spec/js/**/*.js"
+          "src/js/**/*.js"
+        ]
         tasks: ["jshint"]
         options:
           spawn: false

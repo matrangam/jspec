@@ -1,6 +1,9 @@
 # Javascript Source
 /src/js/
 
+# Javascript Specs
+/spec/js/
+
 # Node Modules
 /node_modules/
 
