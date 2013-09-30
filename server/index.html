@@ -7,71 +7,326 @@
     jspec
     <script>
       (function() {
-        var total = 0;
-        var failures = 0;
-        var successes = 0;
+        var suite = new jspec.Suite(function() {
+          // NotToBeFalse
 
-        var expectations = [
-          [true, "NotToBeFalse", [], true],
-          [false, "NotToBeFalse", [], false],
-
-          [null, "NotToBeNull", [], false],
-          [undefined, "NotToBeNull", [], true],
-          ["foo", "NotToBeNull", [], true],
-
-          [true, "NotToBeTrue", [], false],
-          [false, "NotToBeTrue", [], true],
-
-          [null, "NotToBeUndefined", [], true],
-          [undefined, "NotToBeUndefined", [], false],
-          ["foo", "NotToBeUndefined", [], true],
-
-          [true, "ToBeFalse", [], false],
-          [false, "ToBeFalse", [], true],
-
-          [null, "ToBeNull", [], true],
-          [undefined, "ToBeNull", [], false],
-          ["foo", "ToBeNull", [], false],
-
-          [null, "ToBeUndefined", [], false],
-          [undefined, "ToBeUndefined", [], true],
-          ["foo", "ToBeUndefined", [], false],
-
-          [true, "ToBeTrue", [], true],
-          [false, "ToBeTrue", [], false]
-        ];
-
-        console.group("Expectation");
-        for (var i = 0; i < expectations.length; i++) {
-          var example = new jspec.Example(("Expect(" + expectations[i][0] + ")." + expectations[i][1] + "(" + expectations[i][2] + ")"), function() {
-            this.subject(function() { return expectations[i][0]; });
-            this.set("expectedValue", function() { return expectations[i][2]; });
-            return this.expect(this.subject())[expectations[i][1]].apply(null, this.get("expectedValue"));
+          this.example("Expectation::NotToBeFalse when test value is null should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(null).NotToBeFalse(); }).NotToThrow(jspec.ExpectationError);
           });
 
-          var result = null;
-          try {
-            result = example.Execute(new jspec.ExampleContext());
-          }
-          catch(error) {
-            result = error;
-          }
+          this.example("Expectation::NotToBeFalse when test value is undefined should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(undefined).NotToBeFalse(); }).NotToThrow(jspec.ExpectationError);
+          });
 
-          var passed = ((typeof(result) == "boolean" && expectations[i][3] == true) || (result instanceof jspec.ExpectationError && expectations[i][3] == false));
+          this.example("Expectation::NotToBeFalse when test value is false should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(false).NotToBeFalse(); }).ToThrow(jspec.ExpectationError);
+          });
 
-          total++;
-          if (!passed) {
-            failures++;
-          }
-          else {
-            successes++;
-          }
+          this.example("Expectation::NotToBeFalse when test value is true should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(true).NotToBeFalse(); }).NotToThrow(jspec.ExpectationError);
+          });
 
-          console.log((passed ? "+" : "-"), example.GetDescription(), result);
-        }
-        console.groupEnd();
+          this.example("Expectation::NotToBeFalse when test value is an integer should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1).NotToBeFalse(); }).NotToThrow(jspec.ExpectationError);
+          });
 
-        console.log("Total:", total, "Failures:", failures, "Successes:", successes);
+          this.example("Expectation::NotToBeFalse when test value is a float should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1.1).NotToBeFalse(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeFalse when test value is a string should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation("string").NotToBeFalse(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeFalse when test value is an array should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation([]).NotToBeFalse(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeFalse when test value is an object should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation({}).NotToBeFalse(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          // NotToBeNull
+
+          this.example("Expectation::NotToBeNull when test value is null should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(null).NotToBeNull(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeNull when test value is undefined should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(undefined).NotToBeNull(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeNull when test value is false should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(false).NotToBeNull(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeNull when test value is true should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(true).NotToBeNull(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeNull when test value is an integer should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1).NotToBeNull(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeNull when test value is a float should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1.1).NotToBeNull(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeNull when test value is a string should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation("string").NotToBeNull(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeNull when test value is an array should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation([]).NotToBeNull(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeNull when test value is an object should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation({}).NotToBeNull(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          // NotToBeTrue
+
+          this.example("Expectation::NotToBeTrue when test value is null should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(null).NotToBeTrue(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeTrue when test value is undefined should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(undefined).NotToBeTrue(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeTrue when test value is false should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(false).NotToBeTrue(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeTrue when test value is true should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(true).NotToBeTrue(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeTrue when test value is an integer should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1).NotToBeTrue(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeTrue when test value is a float should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1.1).NotToBeTrue(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeTrue when test value is a string should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation("string").NotToBeTrue(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeTrue when test value is an array should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation([]).NotToBeTrue(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeTrue when test value is an object should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation({}).NotToBeTrue(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          // NotToBeUndefined
+
+          this.example("Expectation::NotToBeUndefined when test value is null should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(null).NotToBeUndefined(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeUndefined when test value is undefined should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(undefined).NotToBeUndefined(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeUndefined when test value is false should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(false).NotToBeUndefined(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeUndefined when test value is true should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(true).NotToBeUndefined(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeUndefined when test value is an integer should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1).NotToBeUndefined(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeUndefined when test value is a float should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1.1).NotToBeUndefined(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeUndefined when test value is a string should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation("string").NotToBeUndefined(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeUndefined when test value is an array should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation([]).NotToBeUndefined(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::NotToBeUndefined when test value is an object should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation({}).NotToBeUndefined(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          // ToBeFalse
+
+          this.example("Expectation::ToBeFalse when test value is null should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(null).ToBeFalse(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeFalse when test value is undefined should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(undefined).ToBeFalse(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeFalse when test value is false should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(false).ToBeFalse(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeFalse when test value is true should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(true).ToBeFalse(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeFalse when test value is an integer should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1).ToBeFalse(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeFalse when test value is a float should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1.1).ToBeFalse(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeFalse when test value is a string should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation("string").ToBeFalse(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeFalse when test value is an array should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation([]).ToBeFalse(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeFalse when test value is an object should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation({}).ToBeFalse(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          // ToBeNull
+
+          this.example("Expectation::ToBeNull when test value is null should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(null).ToBeNull(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeNull when test value is undefined should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(undefined).ToBeNull(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeNull when test value is false should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(false).ToBeNull(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeNull when test value is true should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(true).ToBeNull(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeNull when test value is an integer should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1).ToBeNull(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeNull when test value is a float should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1.1).ToBeNull(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeNull when test value is a string should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation("string").ToBeNull(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeNull when test value is an array should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation([]).ToBeNull(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeNull when test value is an object should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation({}).ToBeNull(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          // ToBeTrue
+
+          this.example("Expectation::ToBeTrue when test value is null should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(null).ToBeTrue(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeTrue when test value is undefined should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(undefined).ToBeTrue(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeTrue when test value is false should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(false).ToBeTrue(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeTrue when test value is true should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(true).ToBeTrue(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeTrue when test value is an integer should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1).ToBeTrue(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeTrue when test value is a float should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1.1).ToBeTrue(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeTrue when test value is a string should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation("string").ToBeTrue(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeTrue when test value is an array should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation([]).ToBeTrue(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeTrue when test value is an object should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation({}).ToBeTrue(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          // ToBeUndefined
+
+          this.example("Expectation::ToBeUndefined when test value is null should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(null).ToBeUndefined(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeUndefined when test value is undefined should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(undefined).ToBeUndefined(); }).NotToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeUndefined when test value is false should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(false).ToBeUndefined(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeUndefined when test value is true should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(true).ToBeUndefined(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeUndefined when test value is an integer should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1).ToBeUndefined(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeUndefined when test value is a float should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(1.1).ToBeUndefined(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeUndefined when test value is a string should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation("string").ToBeUndefined(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeUndefined when test value is an array should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation([]).ToBeUndefined(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToBeUndefined when test value is an object should not throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation({}).ToBeUndefined(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          // ToThrow
+
+          this.example("Expectation::ToThrow when test value doesnt throw an error and an expected error is not provided should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(function() { null; }).ToThrow(); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToThrow when test value doesnt throw an error and an expected error is provided a constructor should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(function() { null; }).ToThrow(Error); }).ToThrow(jspec.ExpectationError);
+          });
+
+          this.example("Expectation::ToThrow when test value doesnt throw an error and an expected error is provided an error should throw an ExpectationError", function() {
+            this.expect(function() { new jspec.Expectation(function() { null; }).ToThrow(new Error()); }).ToThrow(jspec.ExpectationError);
+          });
+        });
+        suite.Run();
       })();
     </script>
   </body>
