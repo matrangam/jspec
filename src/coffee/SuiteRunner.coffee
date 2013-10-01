@@ -39,7 +39,7 @@ class SuiteRunner
     for exampleDatum in @_getExampleData()
       exampleError = null
       try
-        exampleDatum.example.Execute(new ExampleContext())
+        exampleDatum.example.Execute(new ExampleEnvironment())
       catch error
         exampleError = error
 

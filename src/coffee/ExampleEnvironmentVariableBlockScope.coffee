@@ -1,4 +1,4 @@
-class ExampleContextVariableBlockScope
+class ExampleEnvironmentVariableBlockScope
   ## Constructor
 
   constructor: (getter) ->

@@ -14,9 +14,9 @@
 
   #= Example.coffee
   #= ExampleBlockScope.coffee
-  #= ExampleContext.coffee
-  #= ExampleContextSubjectBlockScope.coffee
-  #= ExampleContextVariableBlockScope.coffee
+  #= ExampleEnvironment.coffee
+  #= ExampleEnvironmentSubjectBlockScope.coffee
+  #= ExampleEnvironmentVariableBlockScope.coffee
   #= Expectation.coffee
   #= ExpectationAssertionDelegate.coffee
   #= Suite.coffee
@@ -25,7 +25,7 @@
 
   @jspec =
     Example: Example
-    ExampleContext: ExampleContext
+    ExampleEnvironment: ExampleEnvironment
     Expectation: Expectation
     ExpectationError: ExpectationError
     PendingExampleError: PendingExampleError

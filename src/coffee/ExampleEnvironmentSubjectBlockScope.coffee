@@ -1,4 +1,4 @@
-class ExampleContextSubjectBlockScope
+class ExampleEnvironmentSubjectBlockScope
   ## Constructor
 
   constructor: (getter) ->

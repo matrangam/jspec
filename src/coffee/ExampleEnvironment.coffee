@@ -1,4 +1,4 @@
-class ExampleContext
+class ExampleEnvironment
   ## Public Instance Methods
 
   GetSubject: () => @_subject ?= @_getSubjectBlock().apply(@_getSubjectBlockScope())
@@ -38,8 +38,8 @@ class ExampleContext
 
   _getSubjectBlock: () => @_subjectBlock
 
-  _getSubjectBlockScope: () => @_subjectBlockScope ?= new ExampleContextSubjectBlockScope(@GetVariableValue)
+  _getSubjectBlockScope: () => @_subjectBlockScope ?= new ExampleEnvironmentSubjectBlockScope(@GetVariableValue)
 
   _getVariableBlocks: () => @_variableBlocks ?= {}
 
-  _getVariableBlockScope: () => @_variableBlockScope ?= new ExampleContextVariableBlockScope(@GetVariableValue)
+  _getVariableBlockScope: () => @_variableBlockScope ?= new ExampleEnvironmentVariableBlockScope(@GetVariableValue)
