@@ -4,7 +4,7 @@ class SuiteRunner
   constructor: (suite) ->
     @_exampleData = []
 
-    initialPath = [suite.GetName()]
+    initialPath = [suite]
     @_processExamples(initialPath, suite.GetExamples())
     @_processNouns(initialPath, suite.GetNouns())
 
@@ -14,7 +14,7 @@ class SuiteRunner
 
   _processNoun: (initialPath, noun) =>
     initialPath = (pathItem for pathItem in initialPath)
-    initialPath.push(noun.GetName())
+    initialPath.push(noun)
     @_processExamples(initialPath, noun.GetExamples())
     @_processNouns(initialPath, noun.GetNouns())
 
