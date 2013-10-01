@@ -1,8 +1,8 @@
 class ExpectationError
   ## Constructor
 
-  constructor: (message) ->
-    @_message = message
+  constructor: (message = null) ->
+    @_message = (message ? null)
 
   ## Public Instance Methods
 

@@ -10,6 +10,7 @@
 )(@, () ->
   new jspec.Suite("jspec", () ->
     #= Expectation.spec.coffee
+    #= ExpectationError.spec.coffee
     #= PendingExampleError.spec.coffee
   )
 )
