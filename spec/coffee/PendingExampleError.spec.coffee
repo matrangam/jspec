@@ -1,8 +1,6 @@
-@class("PendingExampleError", () ->
-  @construct(() ->
-    #= PendingExampleError/constructor.spec.coffee
-  )
-  @method("GetMessage", () ->
-    #= PendingExampleError/GetMessage.spec.coffee
-  )
+@construct(() ->
+  #= PendingExampleError/constructor.spec.coffee
+)
+@method("GetMessage", () ->
+  #= PendingExampleError/GetMessage.spec.coffee
 )

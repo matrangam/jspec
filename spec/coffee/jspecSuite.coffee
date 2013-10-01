@@ -9,8 +9,14 @@
   null
 )(@, () ->
   new jspec.Suite("jspec", () ->
-    #= Expectation.spec.coffee
-    #= ExpectationError.spec.coffee
-    #= PendingExampleError.spec.coffee
+    @class("Expectation", () ->
+      #= Expectation.spec.coffee
+    )
+    @class("ExpectationError", () ->
+      #= ExpectationError.spec.coffee
+    )
+    @class("PendingExampleError", () ->
+      #= PendingExampleError.spec.coffee
+    )
   )
 )
