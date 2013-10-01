@@ -11,7 +11,9 @@ class SuiteRunner
 
   ## Public Instance Methods
 
-  Run: () =>
+  Run: (reporter) =>
+    startTime = new Date().getTime()
+
     total = 0
     failures = 0
     pendings = 0
@@ -22,21 +24,19 @@ class SuiteRunner
         when exampleError instanceof ExpectationError
           value: exampleError.GetMessage()
           passed: false
-          icon: "\u2612"
         when exampleError instanceof PendingExampleError
           value: exampleError.GetMessage()
           passed: null
-          icon: "\u2610"
         when exampleError instanceof Error
           value: exampleError.message
           passed: false
-          icon: "\u2612"
         else
           value: null
           passed: true
-          icon: "\u2611"
 
-    for exampleDatum in @_getExampleData()
+    reporter.Initialize(@_getExampleData(), startTime)
+
+    for exampleDatum, i in @_getExampleData()
       exampleError = null
       try
         exampleDatum.example.Execute(new ExampleEnvironment())
@@ -51,13 +51,9 @@ class SuiteRunner
         when true then successes++
         when false then failures++
 
-      console.log(
-        result.icon
-        ([exampleDatum.path, exampleDatum.example.GetDescription()].join(" ") + ":")
-        result.value
-      )
+      reporter.Report(i, result.passed, result.value)
 
-    console.log("Total:", total, "Failures:", failures, "Successes:", successes, "Pending:", pendings)
+    reporter.Finished(new Date().getTime())
 
   ## Protected Instance Methods
 

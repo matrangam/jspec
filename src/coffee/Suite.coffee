@@ -13,8 +13,8 @@ class Suite
 
   GetName: () => @_name
 
-  Run: () =>
-    new SuiteRunner(@).Run()
+  Run: (reporter) =>
+    new SuiteRunner(@).Run(reporter)
 
     null
 

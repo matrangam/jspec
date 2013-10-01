@@ -1,14 +1,15 @@
 <!DOCTYPE>
 <html>
   <head>
+    <script src="/jquery.js"></script>
     <script src="/jspec-latest.js"></script>
     <script src="/jspecSuite-latest.js"></script>
   </head>
   <body>
-    jspec
+    <div id="main"></div>
     <script>
       (function() {
-        jspecSuite.Run();
+        jspecSuite.Run(new jspec.HtmlReporter($, "#main"));
       })();
     </script>
   </body>

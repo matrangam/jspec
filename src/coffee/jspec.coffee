@@ -23,11 +23,14 @@
   #= SuiteBlockScope.coffee
   #= SuiteRunner.coffee
 
+  #= HtmlReporter.coffee
+
   @jspec =
     Example: Example
     ExampleEnvironment: ExampleEnvironment
     Expectation: Expectation
     ExpectationError: ExpectationError
+    HtmlReporter: HtmlReporter
     PendingExampleError: PendingExampleError
     Suite: Suite
 
