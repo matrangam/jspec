@@ -1,9 +1,9 @@
 class HtmlReporter
   ## Constructor
 
-  constructor: ($, container) ->
+  constructor: ($, bodyElementOrSelector) ->
     @$ = $
-    @_container = @$(container)
+    @_bodyElement = @$(bodyElementOrSelector)
 
   ## Public Instance Methods
 
@@ -12,13 +12,17 @@ class HtmlReporter
     @_exampleData = exampleData
     @_examples = (new HtmlReporter.Example(@$, exampleDatum) for exampleDatum in @_getExampleData())
 
-    @_getContainer()
-      .append(@_getTimeElapsedElement())
-      .append(@_getTotalExamplesElement())
-      .append(@_getCompletedExamplesElement())
-      .append(@_getFailedExamplesElement())
-      .append(@_getPendingExamplesElement())
-      .append(@_getPassedExamplesElement())
+    @_getBodyElement()
+      .addClass("jspec")
+      .append(
+        $("<header>")
+          .append(@_getTotalExamplesElement())
+          .append(@_getCompletedExamplesElement())
+          .append(@_getFailedExamplesElement())
+          .append(@_getPendingExamplesElement())
+          .append(@_getPassedExamplesElement())
+          .append(@_getTimeElapsedElement())
+      )
       .append(@_getExampleListElement())
 
     @_updateCompletedCount()
@@ -56,11 +60,11 @@ class HtmlReporter
   ## Protected Instance Properties
 
   $: null
+  _bodyElement: null
   _completedCount: 0
   _completedExamplesCountElement: null
   _completedExamplesElement: null
   _completedExamplesPercentElement: null
-  _container: null
   _exampleListElement: null
   _examples: null
   _failedCount: 0
@@ -83,7 +87,11 @@ class HtmlReporter
 
   ## Protected Instance Methods
 
-  _getCompletedExamplesCountElement: () => @_completedExamplesCountElement ?= $("<dd>")
+  _getBodyElement: () => @_bodyElement
+
+  _getCompletedExamplesCountElement: () =>
+    @_completedExamplesCountElement ?= $("<dd>")
+      .addClass("count")
 
   _getCompletedExamplesElement: () =>
     @_completedExamplesElement ?= @$("<dl>")
@@ -91,9 +99,9 @@ class HtmlReporter
       .append(@_getCompletedExamplesCountElement())
       .append(@_getCompletedExamplesPercentElement())
 
-  _getCompletedExamplesPercentElement: () => @_completedExamplesPercentElement ?= $("<dd>")
-
-  _getContainer: () => @_container
+  _getCompletedExamplesPercentElement: () =>
+    @_completedExamplesPercentElement ?= $("<dd>")
+      .addClass("percent")
 
   _getExample: (index) => (@_getExamples()[index] ? null)
 
@@ -103,7 +111,9 @@ class HtmlReporter
 
   _getExamples: () => @_examples
 
-  _getFailedExamplesCountElement: () => @_failedExamplesCountElement ?= @$("<dd>")
+  _getFailedExamplesCountElement: () =>
+    @_failedExamplesCountElement ?= @$("<dd>")
+      .addClass("count")
 
   _getFailedExamplesElement: () =>
     @_failedExamplesElement ?= @$("<dl>")
@@ -111,9 +121,13 @@ class HtmlReporter
       .append(@_getFailedExamplesCountElement())
       .append(@_getFailedExamplesPercentElement())
 
-  _getFailedExamplesPercentElement: () => @_failedExamplesPercentElement ?= $("<dd>")
+  _getFailedExamplesPercentElement: () =>
+    @_failedExamplesPercentElement ?= $("<dd>")
+      .addClass("percent")
 
-  _getPassedExamplesCountElement: () => @_passedExamplesCountElement ?= @$("<dd>")
+  _getPassedExamplesCountElement: () =>
+    @_passedExamplesCountElement ?= @$("<dd>")
+      .addClass("count")
 
   _getPassedExamplesElement: () =>
     @_passedExamplesElement ?= @$("<dl>")
@@ -121,9 +135,13 @@ class HtmlReporter
       .append(@_getPassedExamplesCountElement())
       .append(@_getPassedExamplesPercentElement())
 
-  _getPassedExamplesPercentElement: () => @_passedExamplesPercentElement ?= $("<dd>")
+  _getPassedExamplesPercentElement: () =>
+    @_passedExamplesPercentElement ?= $("<dd>")
+      .addClass("percent")
 
-  _getPendingExamplesCountElement: () => @_pendingExamplesCountElement ?= @$("<dd>")
+  _getPendingExamplesCountElement: () =>
+    @_pendingExamplesCountElement ?= @$("<dd>")
+      .addClass("count")
 
   _getPendingExamplesElement: () =>
     @_pendingExamplesElement ?= @$("<dl>")
@@ -131,18 +149,25 @@ class HtmlReporter
       .append(@_getPendingExamplesCountElement())
       .append(@_getPendingExamplesPercentElement())
 
-  _getPendingExamplesPercentElement: () => @_pendingExamplesPercentElement ?= $("<dd>")
+  _getPendingExamplesPercentElement: () =>
+    @_pendingExamplesPercentElement ?= $("<dd>")
+      .addClass("percent")
 
   _getStartTime: () => @_startTime
 
   _getTimeElapsedElement: () =>
     @_timeElapsedElement ?= @$("<dl>")
+      .addClass("time-elapsed")
       .append(@$("<dt>").text("Time Elapsed"))
       .append(@_getTimeElapsedCountElement())
 
-  _getTimeElapsedCountElement: () => @_timeElapsedCountElement ?= @$("<dd>")
+  _getTimeElapsedCountElement: () =>
+    @_timeElapsedCountElement ?= @$("<dd>")
+      .addClass("count")
 
-  _getTotalExamplesCountElement: () => @_totalExamplesCountElement ?= @$("<span>")
+  _getTotalExamplesCountElement: () =>
+    @_totalExamplesCountElement ?= @$("<span>")
+      .addClass("count")
 
   _getTotalExamplesElement: () =>
     @_totalExamplesElement ?= @$("<dl>")

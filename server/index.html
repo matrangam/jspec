@@ -7,10 +7,9 @@
     <script src="/jspecSuite-latest.js"></script>
   </head>
   <body>
-    <div id="main"></div>
     <script>
       (function() {
-        jspecSuite.Run(new jspec.HtmlReporter($, "#main"));
+        jspecSuite.Run(new jspec.HtmlReporter($, "body"));
       })();
     </script>
   </body>
