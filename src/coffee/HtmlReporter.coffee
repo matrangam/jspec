@@ -14,11 +14,13 @@ class HtmlReporter
     @_getContainer()
       .append(@_getTimeElapsedElement())
       .append(@_getTotalExamplesElement())
+      .append(@_getCompletedExamplesElement())
       .append(@_getFailedExamplesElement())
       .append(@_getPendingExamplesElement())
       .append(@_getPassedExamplesElement())
       .append(@_getExampleListElement())
 
+    @_updateCompletedCount()
     @_updateFailedCount()
     @_updatePassedCount()
     @_updatePendingCount()
@@ -30,6 +32,9 @@ class HtmlReporter
     example = @_getExample(id)
 
     example.Update(passed, result)
+
+    @_completedCount++
+    @_updateCompletedCount()
 
     switch passed
       when null
@@ -50,6 +55,9 @@ class HtmlReporter
   ## Protected Instance Properties
 
   $: null
+  _completedCount: 0
+  _completedExamplesCountElement: null
+  _completedExamplesElement: null
   _container: null
   _exampleListElement: null
   _examples: null
@@ -69,6 +77,13 @@ class HtmlReporter
   _totalExamplesElement: null
 
   ## Protected Instance Methods
+
+  _getCompletedExamplesCountElement: () => @_completedExamplesCountElement ?= $("<dd>")
+
+  _getCompletedExamplesElement: () =>
+    @_completedExamplesElement ?= @$("<dl>")
+      .append(@$("<dt>").text("Completed"))
+      .append(@_getCompletedExamplesCountElement())
 
   _getContainer: () => @_container
 
@@ -114,6 +129,8 @@ class HtmlReporter
     @_totalExamplesElement ?= @$("<dl>")
       .append(@$("<dt>").text("Total"))
       .append(@_getTotalExamplesCountElement())
+
+  _updateCompletedCount: () => @_getCompletedExamplesCountElement().text(@_completedCount)
 
   _updateFailedCount: () => @_getFailedExamplesCountElement().text(@_failedCount)
 
