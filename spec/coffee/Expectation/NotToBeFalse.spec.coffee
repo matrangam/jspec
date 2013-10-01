@@ -14,6 +14,10 @@
   @expect(() -> new jspec.Expectation(true).NotToBeFalse()).NotToThrow()
 )
 
+@example("Expectation::NotToBeFalse() when test value is 0 should not throw an ExpectationError", () ->
+  @expect(() -> new jspec.Expectation(0).NotToBeFalse()).NotToThrow()
+)
+
 @example("Expectation::NotToBeFalse() when test value is an integer should not throw an ExpectationError", () ->
   @expect(() -> new jspec.Expectation(1).NotToBeFalse()).NotToThrow()
 )
