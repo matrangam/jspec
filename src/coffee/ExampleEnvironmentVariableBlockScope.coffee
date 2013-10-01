@@ -6,4 +6,12 @@ class ExampleEnvironmentVariableBlockScope
 
   ## Public Instance Methods
 
-  get: (name) => @_getter(name)
+  get: (name) => @_getGetter()(name)
+
+  ## Protected Instance Properties
+
+  _getter: null
+
+  ## Protected Instance Methods
+
+  _getGetter: () => @_getter
