@@ -14,36 +14,50 @@ class SuiteRunner
   Run: () =>
     total = 0
     failures = 0
+    pendings = 0
     successes = 0
 
-    displayResult = (r) ->
+    getResultData = (exampleError) ->
       switch
-        when r instanceof ExpectationError then r.GetMessage()
-        when r instanceof Error then r.message
-        else r
+        when exampleError instanceof ExpectationError
+          value: exampleError.GetMessage()
+          passed: false
+          icon: "\u2612"
+        when exampleError instanceof PendingExampleError
+          value: exampleError.GetMessage()
+          passed: null
+          icon: "\u2610"
+        when exampleError instanceof Error
+          value: exampleError.message
+          passed: false
+          icon: "\u2612"
+        else
+          value: null
+          passed: true
+          icon: "\u2611"
 
     for exampleDatum in @_getExampleData()
-      result = null
+      exampleError = null
       try
         exampleDatum.example.Execute(new ExampleContext())
-        passed = true
       catch error
-        result = error
-        passed = false
+        exampleError = error
+
+      result = getResultData(exampleError)
 
       total++
-      if passed
-        successes++
-      else
-        failures++
+      switch result.passed
+        when null then pendings++
+        when true then successes++
+        when false then failures++
 
       console.log(
-        (if passed then "+" else "-")
-        [exampleDatum.path, exampleDatum.example.GetDescription()].join(" ")
-        displayResult(result)
+        result.icon
+        ([exampleDatum.path, exampleDatum.example.GetDescription()].join(" ") + ":")
+        result.value
       )
 
-    console.log("Total:", total, "Failures:", failures, "Successes:", successes)
+    console.log("Total:", total, "Failures:", failures, "Successes:", successes, "Pending:", pendings)
 
   ## Protected Instance Methods
 

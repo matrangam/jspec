@@ -10,6 +10,8 @@ class ExampleBlockScope
 
   get: (name) => @_getContext().GetVariableValue(name)
 
+  pending: (message) => throw new PendingExampleError(message)
+
   set: (name, block) =>
     @_getContext().RegisterVariableBlock(name, block)
     null

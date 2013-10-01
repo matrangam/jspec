@@ -16,6 +16,7 @@
   #= Expectation.coffee
   #= ExpectationAssertionDelegate.coffee
   #= ExpectationError.coffee
+  #= PendingExampleError.coffee
   #= Suite.coffee
   #= SuiteBlockScope.coffee
   #= SuiteRunner.coffee
@@ -25,6 +26,7 @@
     ExampleContext: ExampleContext
     Expectation: Expectation
     ExpectationError: ExpectationError
+    PendingExampleError: PendingExampleError
     Suite: Suite
 
   @jspec
