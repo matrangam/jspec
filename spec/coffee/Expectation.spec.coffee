@@ -6,4 +6,5 @@
 #= Expectation/ToBeNull.spec.coffee
 #= Expectation/ToBeTrue.spec.coffee
 #= Expectation/ToBeUndefined.spec.coffee
+#= Expectation/ToEqual.spec.coffee
 #= Expectation/ToThrow.spec.coffee

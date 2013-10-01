@@ -61,6 +61,10 @@ class Expectation
     throw new ExpectationError("Expected #{@_getTestValue()} to be undefined") unless @_getTestValue() is undefined
     true
 
+  ToEqual: (expectedValue) =>
+    throw new ExpectationError("Expected #{@_getTestValue()} to be undefined") unless @_getTestValue() is expectedValue
+    true
+
   ToThrow: (expectedError = null) =>
     thrownError = null
 

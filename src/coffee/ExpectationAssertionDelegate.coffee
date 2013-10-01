@@ -14,6 +14,7 @@ class ExpectationAssertionDelegate
     @to.be.null = @ToBeNull
     @to.be.true = @ToBeTrue
     @to.be.undefined = @ToBeUndefined
+    @to.equal = @ToEqual
     @to.throw = @ToThrow
 
   NotToBeFalse: () => @_getExpectation().NotToBeFalse()
@@ -29,6 +30,8 @@ class ExpectationAssertionDelegate
   ToBeFalse: () => @_getExpectation().ToBeFalse()
 
   ToBeNull: () => @_getExpectation().ToBeNull()
+
+  ToEqual: (expectedValue) => @_getExpectation().ToEqual(expectedValue)
 
   ToThrow: (expectedError = null) => @_getExpectation().ToThrow(expectedError)
 
@@ -51,6 +54,7 @@ class ExpectationAssertionDelegate
       null: null
       true: null
       undefined: null
+    equal: null
     throw: null
 
   ## Protected Instance Properties
