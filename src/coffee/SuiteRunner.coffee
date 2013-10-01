@@ -14,46 +14,40 @@ class SuiteRunner
   Run: (reporter) =>
     startTime = new Date().getTime()
 
-    total = 0
-    failures = 0
-    pendings = 0
-    successes = 0
+    buildExampleExecutor = (example) =>
+      () => example.Execute(new ExampleEnvironment())
 
-    getResultData = (exampleError) ->
-      switch
-        when exampleError instanceof ExpectationError
-          value: exampleError.GetMessage()
-          passed: false
-        when exampleError instanceof PendingExampleError
-          value: exampleError.GetMessage()
-          passed: null
-        when exampleError instanceof Error
-          value: exampleError.message
-          passed: false
-        else
-          value: null
-          passed: true
+    handleExampleFailure = (error) => error
+
+    buildExampleSuccessHandler = (i) =>
+      (ret) =>
+        result = switch
+          when ret instanceof ExpectationError
+            value: ret.GetMessage()
+            passed: false
+          when ret instanceof PendingExampleError
+            value: ret.GetMessage()
+            passed: null
+          when ret instanceof Error
+            value: ret.message
+            passed: false
+          else
+            value: null
+            passed: true
+
+        reporter.Report(i, result.passed, result.value)
 
     reporter.Initialize(@_getExampleData(), startTime)
 
-    for exampleDatum, i in @_getExampleData()
-      exampleError = null
-      try
-        exampleDatum.example.Execute(new ExampleEnvironment())
-      catch error
-        exampleError = error
-
-      result = getResultData(exampleError)
-
-      total++
-      switch result.passed
-        when null then pendings++
-        when true then successes++
-        when false then failures++
-
-      reporter.Report(i, result.passed, result.value)
-
-    reporter.Finished(new Date().getTime())
+    Q
+      .allSettled(
+        for exampleDatum, i in @_getExampleData()
+          Q
+            .fcall(buildExampleExecutor(exampleDatum.example))
+            .fail(handleExampleFailure)
+            .then(buildExampleSuccessHandler(i))
+      )
+      .then((promises) => reporter.Finished(new Date().getTime()))
 
   ## Protected Instance Methods
 
