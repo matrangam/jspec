@@ -1,3 +1,6 @@
+# Operating Sytstem files
+.DS_Store
+
 # Build artifacts
 /spec/coffee/jspecSuite-latest.coffee
 
