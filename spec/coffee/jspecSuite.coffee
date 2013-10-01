@@ -9,6 +9,6 @@
   null
 )(@, () ->
   new jspec.Suite("jspec", () ->
-    #= ExpectationSpec.coffee
+    #= Expectation.spec.coffee
   )
 )
