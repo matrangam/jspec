@@ -7,7 +7,7 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks("grunt-contrib-watch")
   grunt.loadNpmTasks("grunt-rigger")
 
-  grunt.registerTask("default", ["clean", "coffeelint", "coffee", "jshint", "connect", "watch"])
+  grunt.registerTask("default", ["clean", "coffeelint", "rig", "coffee", "jshint", "connect", "watch"])
 
   grunt.initConfig(
     pkg: grunt.file.readJSON("package.json")
@@ -91,7 +91,7 @@ module.exports = (grunt) ->
           "spec/coffee/**/*.coffee"
           "src/coffee/**/*.coffee"
         ]
-        tasks: ["coffeelint", "coffee", "jshint"]
+        tasks: ["coffeelint", "rig", "coffee", "jshint"]
         options:
           spawn: false
 
