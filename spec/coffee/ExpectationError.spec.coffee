@@ -1,4 +1,8 @@
 @class("ExpectationError", () ->
-  #= ExpectationError/constructor.spec.coffee
-  #= ExpectationError/GetMessage.spec.coffee
+  @construct(() ->
+    #= ExpectationError/constructor.spec.coffee
+  )
+  @method("GetMessage", () ->
+    #= ExpectationError/GetMessage.spec.coffee
+  )
 )

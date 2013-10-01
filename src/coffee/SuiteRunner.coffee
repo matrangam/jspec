@@ -3,17 +3,28 @@ class SuiteRunner
 
   constructor: (suite) ->
     @_exampleData = []
-    for example in suite.GetExamples()
-      @_exampleData.push(
-        path: [suite.GetName()]
-        example: example
-      )
-    for noun in suite.GetNouns()
-      for example in noun.GetExamples()
-        @_exampleData.push(
-          path: [suite.GetName(), noun.GetName()]
-          example: example
-        )
+
+    initialPath = [suite.GetName()]
+    @_processExamples(initialPath, suite.GetExamples())
+    @_processNouns(initialPath, suite.GetNouns())
+
+  _processExample: (initialPath, example) => @_pushExampleDatum(@_exampleData, (pathItem for pathItem in initialPath), example)
+
+  _processExamples: (initialPath, examples) => @_processExample(initialPath, example) for example in examples
+
+  _processNoun: (initialPath, noun) =>
+    initialPath = (pathItem for pathItem in initialPath)
+    initialPath.push(noun.GetName())
+    @_processExamples(initialPath, noun.GetExamples())
+    @_processNouns(initialPath, noun.GetNouns())
+
+  _processNouns: (initialPath, nouns) => @_processNoun(initialPath, noun) for noun in nouns
+
+  _pushExampleDatum: (exampleData, path, example) =>
+    exampleData.push(
+      path: path
+      example: example
+    )
 
   ## Public Instance Methods
 

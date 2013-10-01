@@ -1,12 +1,32 @@
 @class("Expectation", () ->
-  #= Expectation/NotToBeFalse.spec.coffee
-  #= Expectation/NotToBeNull.spec.coffee
-  #= Expectation/NotToBeTrue.spec.coffee
-  #= Expectation/NotToBeUndefined.spec.coffee
-  #= Expectation/ToBeFalse.spec.coffee
-  #= Expectation/ToBeNull.spec.coffee
-  #= Expectation/ToBeTrue.spec.coffee
-  #= Expectation/ToBeUndefined.spec.coffee
-  #= Expectation/ToEqual.spec.coffee
-  #= Expectation/ToThrow.spec.coffee
+  @method("NotToBeFalse", () ->
+    #= Expectation/NotToBeFalse.spec.coffee
+  )
+  @method("NotToBeNull", () ->
+    #= Expectation/NotToBeNull.spec.coffee
+  )
+  @method("NotToBeTrue", () ->
+    #= Expectation/NotToBeTrue.spec.coffee
+  )
+  @method("NotToBeUndefined", () ->
+    #= Expectation/NotToBeUndefined.spec.coffee
+  )
+  @method("ToBeFalse", () ->
+    #= Expectation/ToBeFalse.spec.coffee
+  )
+  @method("ToBeNull", () ->
+    #= Expectation/ToBeNull.spec.coffee
+  )
+  @method("ToBeTrue", () ->
+    #= Expectation/ToBeTrue.spec.coffee
+  )
+  @method("ToBeUndefined", () ->
+    #= Expectation/ToBeUndefined.spec.coffee
+  )
+  @method("ToEqual", () ->
+    #= Expectation/ToEqual.spec.coffee
+  )
+  @method("ToThrow", () ->
+    #= Expectation/ToThrow.spec.coffee
+  )
 )

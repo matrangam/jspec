@@ -13,17 +13,24 @@ class Noun
 
   GetName: () => @_name
 
+  GetNouns: () => @_nouns ?= []
+
   ## Protected Instance Properties
 
   _block: null
   _blockScope: null
   _examples: null
   _name: null
+  _nouns: null
 
   ## Protected Instance Methods
 
-  _getBlockScope: () => @_blockScope ?= new NounBlockScope(@_registerExample)
+  _getBlockScope: () => @_blockScope ?= new NounBlockScope(@_registerExample, @_registerNoun)
 
   _registerExample: (description, block) =>
     @GetExamples().push(new Example(description, block))
+    null
+
+  _registerNoun: (name, block) =>
+    @GetNouns().push(new Noun(name, block))
     null
