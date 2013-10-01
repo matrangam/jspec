@@ -78,12 +78,15 @@ class HtmlReporter
 
   ## Protected Instance Methods
 
-  _getCompletedExamplesCountElement: () => @_completedExamplesCountElement ?= $("<dd>")
+  _getCompletedExamplesCountElement: () => @_completedExamplesCountElement ?= $("<span>")
 
   _getCompletedExamplesElement: () =>
     @_completedExamplesElement ?= @$("<dl>")
       .append(@$("<dt>").text("Completed"))
-      .append(@_getCompletedExamplesCountElement())
+      .append(
+        @$("<dd>")
+          .append(@_getCompletedExamplesCountElement())
+      )
 
   _getContainer: () => @_container
 
@@ -93,26 +96,35 @@ class HtmlReporter
 
   _getExamples: () => @_examples
 
-  _getFailedExamplesCountElement: () => @_failedExamplesCountElement ?= @$("<dd>")
+  _getFailedExamplesCountElement: () => @_failedExamplesCountElement ?= @$("<span>")
 
   _getFailedExamplesElement: () =>
     @_failedExamplesElement ?= @$("<dl>")
       .append(@$("<dt>").text("Failed"))
-      .append(@_getFailedExamplesCountElement())
+      .append(
+        @$("<dd>")
+          .append(@_getFailedExamplesCountElement())
+        )
 
-  _getPassedExamplesCountElement: () => @_passedExamplesCountElement ?= @$("<dd>")
+  _getPassedExamplesCountElement: () => @_passedExamplesCountElement ?= @$("<span>")
 
   _getPassedExamplesElement: () =>
     @_passedExamplesElement ?= @$("<dl>")
       .append(@$("<dt>").text("Passed"))
-      .append(@_getPassedExamplesCountElement())
+      .append(
+        @$("<dd>")
+          .append(@_getPassedExamplesCountElement())
+        )
 
-  _getPendingExamplesCountElement: () => @_pendingExamplesCountElement ?= @$("<dd>")
+  _getPendingExamplesCountElement: () => @_pendingExamplesCountElement ?= @$("<span>")
 
   _getPendingExamplesElement: () =>
     @_pendingExamplesElement ?= @$("<dl>")
       .append(@$("<dt>").text("Pending"))
-      .append(@_getPendingExamplesCountElement())
+      .append(
+        @$("<dd>")
+          .append(@_getPendingExamplesCountElement())
+        )
 
   _getStartTime: () => @_startTime
 
@@ -123,12 +135,15 @@ class HtmlReporter
 
   _getTimeElapsedCountElement: () => @_timeElapsedCountElement ?= @$("<dd>")
 
-  _getTotalExamplesCountElement: () => @_totalExamplesCountElement ?= @$("<dd>")
+  _getTotalExamplesCountElement: () => @_totalExamplesCountElement ?= @$("<span>")
 
   _getTotalExamplesElement: () =>
     @_totalExamplesElement ?= @$("<dl>")
       .append(@$("<dt>").text("Total"))
-      .append(@_getTotalExamplesCountElement())
+      .append(
+        @$("<dd>")
+          .append(@_getTotalExamplesCountElement())
+        )
 
   _updateCompletedCount: () => @_getCompletedExamplesCountElement().text(@_completedCount)
 
