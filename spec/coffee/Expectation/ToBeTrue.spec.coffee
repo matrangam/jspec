@@ -11,7 +11,7 @@
 )
 
 @example("Expectation::ToBeTrue() when test value is true should not throw an ExpectationError", () ->
-  @expect(() -> new jspec.Expectation(true).ToBeTrue()).NotToThrow(jspec.ExpectationError)
+  @expect(() -> new jspec.Expectation(true).ToBeTrue()).NotToThrow()
 )
 
 @example("Expectation::ToBeTrue() when test value is an integer should not throw an ExpectationError", () ->

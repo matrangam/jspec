@@ -1,5 +1,5 @@
 @example("Expectation::ToBeNull() when test value is null should throw an ExpectationError", () ->
-  @expect(() -> new jspec.Expectation(null).ToBeNull()).NotToThrow(jspec.ExpectationError)
+  @expect(() -> new jspec.Expectation(null).ToBeNull()).NotToThrow()
 )
 
 @example("Expectation::ToBeNull() when test value is undefined should not throw an ExpectationError", () ->

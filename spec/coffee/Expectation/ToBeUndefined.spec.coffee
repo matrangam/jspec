@@ -3,7 +3,7 @@
 )
 
 @example("Expectation::ToBeUndefined() when test value is undefined should not throw an ExpectationError", () ->
-  @expect(() -> new jspec.Expectation(undefined).ToBeUndefined()).NotToThrow(jspec.ExpectationError)
+  @expect(() -> new jspec.Expectation(undefined).ToBeUndefined()).NotToThrow()
 )
 
 @example("Expectation::ToBeUndefined() when test value is false should not throw an ExpectationError", () ->
