@@ -99,7 +99,7 @@ class HtmlReporter
 
   _getExampleData: () => @_exampleData
 
-  _getExampleListElement: (index) => @_exampleListElement ?= $("<ul>")
+  _getExampleListElement: (index) => @_exampleListElement ?= $("<ol>")
 
   _getExamples: () => @_examples
 
