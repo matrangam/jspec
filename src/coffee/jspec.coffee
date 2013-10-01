@@ -19,6 +19,8 @@
   #= ExampleEnvironmentVariableBlockScope.coffee
   #= Expectation.coffee
   #= ExpectationAssertionDelegate.coffee
+  #= Noun.coffee
+  #= NounBlockScope.coffee
   #= Suite.coffee
   #= SuiteBlockScope.coffee
   #= SuiteRunner.coffee

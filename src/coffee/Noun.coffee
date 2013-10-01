@@ -1,4 +1,4 @@
-class Suite
+class Noun
   ## Constructor
 
   constructor: (name, block) ->
@@ -13,29 +13,17 @@ class Suite
 
   GetName: () => @_name
 
-  GetNouns: () => @_nouns ?= []
-
-  Run: (reporter) =>
-    new SuiteRunner(@).Run(reporter)
-
-    null
-
   ## Protected Instance Properties
 
   _block: null
   _blockScope: null
   _examples: null
   _name: null
-  _nouns: null
 
   ## Protected Instance Methods
 
-  _getBlockScope: () => @_blockScope ?= new SuiteBlockScope(@_registerExample, @_registerNoun)
+  _getBlockScope: () => @_blockScope ?= new NounBlockScope(@_registerExample)
 
   _registerExample: (description, block) =>
     @GetExamples().push(new Example(description, block))
-    null
-
-  _registerNoun: (name, block) =>
-    @GetNouns().push(new Noun(name, block))
     null

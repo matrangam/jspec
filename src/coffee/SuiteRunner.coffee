@@ -8,6 +8,12 @@ class SuiteRunner
         path: [suite.GetName()]
         example: example
       )
+    for noun in suite.GetNouns()
+      for example in noun.GetExamples()
+        @_exampleData.push(
+          path: [suite.GetName(), noun.GetName()]
+          example: example
+        )
 
   ## Public Instance Methods
 

@@ -206,7 +206,7 @@ class HtmlReporter.Example
 
   _getDescriptionElement: () =>
     @_descriptionElement ?= @$("<span>")
-      .text([@_getExampleDatum().path, @_getExampleDatum().example.GetDescription()].join(" "))
+      .text([@_getExampleDatum().path.join("/"), @_getExampleDatum().example.GetDescription()].join(" "))
 
   _getExampleDatum: () => @_exampleDatum
 
