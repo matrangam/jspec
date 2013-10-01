@@ -1,4 +1,4 @@
-@example("Expectation::ToThrow when test value doesnt throw an error and an expected error is not provided should throw an ExpectationError", () ->
+@example("Expectation::ToThrow() when test value doesnt throw an error and an expected error is not provided should throw an ExpectationError", () ->
   thrownError = null
 
   try
@@ -9,7 +9,7 @@
   @expect(thrownError instanceof jspec.ExpectationError).ToBeTrue()
 )
 
-@example("Expectation::ToThrow when test value doesnt throw an error and an expected error is provided a constructor should throw an ExpectationError", () ->
+@example("Expectation::ToThrow() when test value doesnt throw an error and an expected error is provided a constructor should throw an ExpectationError", () ->
   thrownError = null
 
   try
@@ -20,7 +20,7 @@
   @expect(thrownError instanceof jspec.ExpectationError).ToBeTrue()
 )
 
-@example("Expectation::ToThrow when test value doesnt throw an error and an expected error is provided an error should throw an ExpectationError", () ->
+@example("Expectation::ToThrow() when test value doesnt throw an error and an expected error is provided an error should throw an ExpectationError", () ->
   thrownError = null
 
   try
