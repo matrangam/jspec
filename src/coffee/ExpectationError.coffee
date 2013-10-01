@@ -1,9 +1,1 @@
-class ExpectationError
-  ## Constructor
-
-  constructor: (message = null) ->
-    @_message = (message ? null)
-
-  ## Public Instance Methods
-
-  GetMessage: () => @_message
+class ExpectationError extends BaseError

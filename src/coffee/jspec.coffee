@@ -8,6 +8,10 @@
 
   null
 )(@, () ->
+  #= BaseError.coffee
+  #= ExpectationError.coffee
+  #= PendingExampleError.coffee
+
   #= Example.coffee
   #= ExampleBlockScope.coffee
   #= ExampleContext.coffee
@@ -15,8 +19,6 @@
   #= ExampleContextVariableBlockScope.coffee
   #= Expectation.coffee
   #= ExpectationAssertionDelegate.coffee
-  #= ExpectationError.coffee
-  #= PendingExampleError.coffee
   #= Suite.coffee
   #= SuiteBlockScope.coffee
   #= SuiteRunner.coffee
