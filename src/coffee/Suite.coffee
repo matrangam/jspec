@@ -23,7 +23,7 @@ class Suite
   _block: null
   _blockScope: null
   _examples: null
-  _name: name
+  _name: null
 
   ## Protected Instance Methods
 
