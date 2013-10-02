@@ -1,11 +1,17 @@
 # Operating Sytstem files
 .DS_Store
 
+# SASS
+/.sass-cache/
+
 # Build artifacts
 /spec/coffee/jspecSuite-latest.coffee
 
 # Build artifacts
 /src/coffee/jspec-latest.coffee
+
+# CSS Source
+/src/css/
 
 # Javascript Source
 /src/js/

@@ -1,19 +1,21 @@
 module.exports = (grunt) ->
+  grunt.loadNpmTasks("grunt-coffeelint")
   grunt.loadNpmTasks("grunt-contrib-clean")
   grunt.loadNpmTasks("grunt-contrib-coffee")
+  grunt.loadNpmTasks("grunt-contrib-compass")
   grunt.loadNpmTasks("grunt-contrib-connect")
   grunt.loadNpmTasks("grunt-contrib-jshint")
-  grunt.loadNpmTasks("grunt-coffeelint")
   grunt.loadNpmTasks("grunt-contrib-watch")
   grunt.loadNpmTasks("grunt-rigger")
 
-  grunt.registerTask("default", ["clean", "coffeelint", "rig", "coffee", "jshint", "connect", "watch"])
+  grunt.registerTask("default", ["clean", "coffeelint", "rig", "coffee", "jshint", "compass", "connect", "watch"])
 
   grunt.initConfig(
     pkg: grunt.file.readJSON("package.json")
 
     clean:
       spec: ["spec/js/*"]
+      css: ["src/css/*"]
       src: ["src/js/*"]
 
     coffee:
@@ -60,6 +62,14 @@ module.exports = (grunt) ->
       spec: ["spec/coffee/**/*.coffee"]
       src: ["src/coffee/**/*.coffee"]
 
+    compass:
+      options:
+        config: ".compass.rb"
+      dev:
+        options:
+          sassDir: "src/scss/"
+          cssDir: "src/css/"
+
     connect:
       server:
         options:
@@ -67,6 +77,7 @@ module.exports = (grunt) ->
           base: [
             "server/"
             "spec/js/"
+            "src/css/"
             "src/js/"
           ]
 
@@ -101,6 +112,14 @@ module.exports = (grunt) ->
           "src/js/**/*.js"
         ]
         tasks: ["jshint"]
+        options:
+          spawn: false
+
+      scss:
+        files: [
+          "src/scss/**/*.scss"
+        ]
+        tasks: ["compass"]
         options:
           spawn: false
   )

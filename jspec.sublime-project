@@ -9,8 +9,10 @@
         "src/coffee/jspec-latest.coffee"
       ],
       "folder_exclude_patterns": [
+        ".sass-cache",
         "node_modules",
         "spec/js",
+        "src/css",
         "src/js"
       ]
     }

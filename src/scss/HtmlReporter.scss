@@ -1,0 +1,70 @@
+@import "compass/reset";
+
+// Typography
+@import "compass/typography/vertical_rhythm";
+
+$base-font-size: 14px;
+$base-line-height: 21px;
+
+@include establish-baseline;
+
+// Theme Configuration
+$body-background-color: #fff;
+$body-font-family: tahoma, verdana, arial, sans-serif;
+$body-color: #444;
+$header-background-color: #000;
+$header-color: #fff;
+
+// Grid Configuration
+@import "susy";
+
+$break-mobile: 4;
+$break-tablet: 8;
+$break-desktop: 12;
+
+$total-columns: $break-mobile;
+$column-width: 60px;
+$gutter-width: 20px;
+$grid-padding: 10px;
+$container-style: fluid;
+
+body.jspec {
+  margin: 0;
+  padding: 0;
+  background-color: $body-background-color;
+  font-family: $body-font-family;
+  color: $body-color;
+
+  > header {
+    @include container($total-columns, $break-mobile, $break-tablet, $break-desktop);
+
+    @include background(linear-gradient(lighten($header-background-color, 30%), $header-background-color));
+    color: $header-color;
+
+    > dl {
+      @include span-columns(1, 3);
+      @include nth-omega(3n);
+
+      @include at-breakpoint($break-desktop) {
+        @include span-columns(2);
+        @include remove-nth-omega(3n);
+        @include nth-omega(6n);
+      }
+
+      > dd {
+        margin: 0;
+
+        &.percent {
+          display: none;
+
+          &:before {
+            content: "(";
+          }
+          &:after {
+            content: ")";
+          }
+        }
+      }
+    }
+  }
+}

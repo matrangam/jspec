@@ -16,14 +16,17 @@ class HtmlReporter
       .addClass("jspec")
       .append(
         $("<header>")
+          .append(@_getTimeElapsedElement())
           .append(@_getTotalExamplesElement())
           .append(@_getCompletedExamplesElement())
           .append(@_getFailedExamplesElement())
           .append(@_getPendingExamplesElement())
           .append(@_getPassedExamplesElement())
-          .append(@_getTimeElapsedElement())
       )
-      .append(@_getExampleListElement())
+      .append(
+        $("<article>")
+          .append(@_getExampleListElement())
+      )
 
     @_updateCompletedCount()
     @_updateFailedCount()
@@ -158,7 +161,7 @@ class HtmlReporter
   _getTimeElapsedElement: () =>
     @_timeElapsedElement ?= @$("<dl>")
       .addClass("time-elapsed")
-      .append(@$("<dt>").text("Time Elapsed"))
+      .append(@$("<dt>").text("Runtime"))
       .append(@_getTimeElapsedCountElement())
 
   _getTimeElapsedCountElement: () =>
