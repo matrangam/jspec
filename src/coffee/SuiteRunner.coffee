@@ -31,39 +31,35 @@ class SuiteRunner
   Run: (reporter) =>
     startTime = new Date().getTime()
 
-    buildExampleExecutor = (example) =>
-      () => example.Execute(new ExampleEnvironment())
-
     handleExampleFailure = (error) => error
 
-    buildExampleSuccessHandler = (i) =>
-      (ret) =>
-        result = switch
-          when ret instanceof ExpectationError
-            value: ret.GetMessage()
-            passed: false
-          when ret instanceof PendingExampleError
-            value: ret.GetMessage()
-            passed: null
-          when ret instanceof Error
-            value: ret.message
-            passed: false
-          else
-            value: null
-            passed: true
+    buildExamplePromise = (exampleDatum, i) =>
+      Q
+        .resolve(null)
+        .then(() => exampleDatum.example.Execute(new ExampleEnvironment()))
+        .fail(handleExampleFailure)
+        .then((ret) =>
+          result = switch
+            when ret instanceof ExpectationError
+              value: ret.GetMessage()
+              passed: false
+            when ret instanceof PendingExampleError
+              value: ret.GetMessage()
+              passed: null
+            when ret instanceof Error
+              value: ret.message
+              passed: false
+            else
+              value: null
+              passed: true
 
-        reporter.Report(i, result.passed, result.value)
+          reporter.Report(i, result.passed, result.value)
+        )
 
     reporter.Initialize(@_getExampleData(), startTime)
 
     Q
-      .allSettled(
-        for exampleDatum, i in @_getExampleData()
-          Q
-            .fcall(buildExampleExecutor(exampleDatum.example))
-            .fail(handleExampleFailure)
-            .then(buildExampleSuccessHandler(i))
-      )
+      .allSettled(buildExamplePromise(exampleDatum, i) for exampleDatum, i in @_getExampleData())
       .then((promises) => reporter.Finished(new Date().getTime()))
 
   ## Protected Instance Methods
