@@ -5,12 +5,15 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks("grunt-contrib-jshint")
   grunt.loadNpmTasks("grunt-contrib-watch")
   grunt.loadNpmTasks("grunt-rigger")
+  grunt.loadNpmTasks("grunt-shell")
 
   grunt.registerTask("default", ["clean", "build", "compass", "connect", "watch"])
 
   grunt.registerTask("build", ["build:src", "build:spec"])
   grunt.registerTask("build:spec", ["clean:spec", "rig:spec", "jshint:spec"])
   grunt.registerTask("build:src", ["clean:src", "rig:src", "jshint:src"])
+
+  grunt.registerTask("spec", ["shell:spec"])
 
   grunt.initConfig(
     pkg: grunt.file.readJSON("package.json")
@@ -54,6 +57,12 @@ module.exports = (grunt) ->
       src:
         src: "src/coffee/jspec.coffee"
         dest: "src/js/jspec-latest.js"
+
+    shell:
+      spec:
+        options:
+          stdout: true
+        command: "bin/jspec.js"
 
     watch:
       coffee:
