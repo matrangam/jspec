@@ -85,6 +85,18 @@ class SuiteRunner.ExampleWrapper
 
   GetExample: () => @_example
 
+  GetExampleDescription: () =>
+    [
+      (
+        for pathItem in @GetPath()
+          switch
+            when pathItem instanceof Noun then pathItem.GetName()
+            when pathItem instanceof Suite then pathItem.GetName()
+            else pathItem
+      ).join("/")
+      @GetExample().GetDescription()
+    ].join(" ")
+
   GetId: () => @_id
 
   GetMessage: () => @_message

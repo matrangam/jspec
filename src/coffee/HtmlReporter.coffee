@@ -226,21 +226,9 @@ class HtmlReporter.ExampleView
 
   ## Protected Instance Methods
 
-  _buildDescription: () =>
-    [
-      (
-        for pathItem in @_getExampleWrapper().GetPath()
-          switch
-            when pathItem instanceof Noun then pathItem.GetName()
-            when pathItem instanceof Suite then pathItem.GetName()
-            else pathItem
-      ).join("/")
-      @_getExampleWrapper().GetExample().GetDescription()
-    ].join(" ")
-
   _getDescriptionElement: () =>
     @_descriptionElement ?= @$("<span>")
-      .text(@_buildDescription())
+      .text(@_getExampleWrapper().GetExampleDescription())
 
   _getExampleWrapper: () => @_exampleWrapper
 
