@@ -45,18 +45,14 @@ class HtmlReporter extends Reporter
 
     exampleView.Update()
 
-    @_completedCount++
     @_updateCompletedCount()
 
     switch exampleView.GetExampleWrapper().GetResult()
       when SuiteRunner.ExampleWrapper.RESULT.PENDING
-        @_pendingCount++
         @_updatePendingCount()
       when SuiteRunner.ExampleWrapper.RESULT.PASSED
-        @_passedCount++
         @_updatePassedCount()
       when SuiteRunner.ExampleWrapper.RESULT.FAILED
-        @_failedCount++
         @_updateFailedCount()
 
     @_updateTimeElapsedCountElement(new Date().getTime())
@@ -65,21 +61,17 @@ class HtmlReporter extends Reporter
 
   $: null
   _bodyElement: null
-  _completedCount: 0
   _completedExamplesCountElement: null
   _completedExamplesElement: null
   _completedExamplesPercentElement: null
   _exampleListElement: null
   _exampleViews: null
-  _failedCount: 0
   _failedExamplesCountElement: null
   _failedExamplesElement: null
   _failedExamplesPercentElement: null
-  _passedCount: 0
   _passedExamplesCountElement: null
   _passedExamplesElement: null
   _passedExamplesPercentElement: null
-  _pendingCount: 0
   _pendingExamplesCountElement: null
   _pendingExamplesElement: null
   _pendingExamplesPercentElement: null
@@ -177,20 +169,24 @@ class HtmlReporter extends Reporter
         )
 
   _updateCompletedCount: () =>
-    @_getCompletedExamplesCountElement().text(@_completedCount)
-    @_getCompletedExamplesPercentElement().text("#{(@_completedCount / @_getExampleWrappers().length * 100)}%")
+    completedCount = (null for id, exampleView of @_getExampleViews() when exampleView.GetExampleWrapper().GetStatus() is SuiteRunner.ExampleWrapper.STATUS.EXECUTED).length
+    @_getCompletedExamplesCountElement().text(completedCount)
+    @_getCompletedExamplesPercentElement().text("#{(completedCount / @_getExampleWrappers().length * 100)}%")
 
   _updateFailedCount: () =>
-    @_getFailedExamplesCountElement().text(@_failedCount)
-    @_getFailedExamplesPercentElement().text("#{(@_failedCount / @_getExampleWrappers().length * 100)}%")
+    failedCount = (null for id, exampleView of @_getExampleViews() when exampleView.GetExampleWrapper().GetResult() is SuiteRunner.ExampleWrapper.RESULT.FAILED).length
+    @_getFailedExamplesCountElement().text(failedCount)
+    @_getFailedExamplesPercentElement().text("#{(failedCount / @_getExampleWrappers().length * 100)}%")
 
   _updatePassedCount: () =>
-    @_getPassedExamplesCountElement().text(@_passedCount)
-    @_getPassedExamplesPercentElement().text("#{(@_passedCount / @_getExampleWrappers().length * 100)}%")
+    passedCount = (null for id, exampleView of @_getExampleViews() when exampleView.GetExampleWrapper().GetResult() is SuiteRunner.ExampleWrapper.RESULT.PASSED).length
+    @_getPassedExamplesCountElement().text(passedCount)
+    @_getPassedExamplesPercentElement().text("#{(passedCount / @_getExampleWrappers().length * 100)}%")
 
   _updatePendingCount: () =>
-    @_getPendingExamplesCountElement().text(@_pendingCount)
-    @_getPendingExamplesPercentElement().text("#{(@_pendingCount / @_getExampleWrappers().length * 100)}%")
+    pendingCount = (null for id, exampleView of @_getExampleViews() when exampleView.GetExampleWrapper().GetResult() is SuiteRunner.ExampleWrapper.RESULT.PENDING).length
+    @_getPendingExamplesCountElement().text(pendingCount)
+    @_getPendingExamplesPercentElement().text("#{(pendingCount / @_getExampleWrappers().length * 100)}%")
 
   _updateTimeElapsedCountElement: (endTime) => @_getTimeElapsedCountElement().text("#{endTime - @_getStartTime()}ms")
 
