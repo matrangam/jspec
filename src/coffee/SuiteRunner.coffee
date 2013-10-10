@@ -21,7 +21,6 @@ class SuiteRunner
   ## Public Instance Methods
 
   Run: (reporter) =>
-    console.log(@_getExampleWrappers())
     startTime = new Date().getTime()
 
     handleExampleFailure = (error) => error
