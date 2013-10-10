@@ -12,8 +12,8 @@ class Reporter
 
   ## Public Instance Methods
 
-  Report: (id) =>
-    @_report(id)
+  Report: (exampleWrapper) =>
+    @_report(exampleWrapper)
 
   ## Overridable Protected Instance Methods
 
@@ -21,7 +21,7 @@ class Reporter
 
   _initialize: () => null
 
-  _report: (id) => null
+  _report: (exampleWrapper) => null
 
   ## Protected Instance Properties
 

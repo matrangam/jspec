@@ -40,8 +40,8 @@ class HtmlReporter extends Reporter
 
     @_getExampleListElement().append(@$("<li>").append(example.GetElement()) for id, example of @_getExampleViews())
 
-  _report: (id) =>
-    exampleView = @_getExampleView(id)
+  _report: (exampleWrapper) =>
+    exampleView = @_getExampleView(exampleWrapper.GetId())
 
     exampleView.Update()
 

@@ -47,7 +47,7 @@ class SuiteRunner
             else
               exampleWrapper.SetResult(SuiteRunner.ExampleWrapper.RESULT.PASSED)
 
-          reporter.Report(exampleWrapper.GetId())
+          reporter.Report(exampleWrapper)
         )
 
     reporter.Initialize(@_getExampleWrappers(), startTime)
