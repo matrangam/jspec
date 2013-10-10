@@ -61,8 +61,9 @@ module.exports = (grunt) ->
     shell:
       spec:
         options:
+          stderr: true
           stdout: true
-        command: "bin/jspec.js"
+        command: "bin/jspec"
 
     watch:
       coffee:
