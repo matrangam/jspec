@@ -30,9 +30,10 @@ class SuiteRunner
         .resolve(null)
         .then(() => exampleWrapper.SetStatus(SuiteRunner.ExampleWrapper.STATUS.EXECUTING))
         .then(() => exampleWrapper.GetExample().Execute(new ExampleEnvironment()))
-        .then(() => exampleWrapper.SetStatus(SuiteRunner.ExampleWrapper.STATUS.EXECUTED))
         .fail(handleExampleFailure)
         .then((ret) =>
+          exampleWrapper.SetStatus(SuiteRunner.ExampleWrapper.STATUS.EXECUTED)
+
           switch
             when ret instanceof ExpectationError
               exampleWrapper.SetMessage(ret.GetMessage())
