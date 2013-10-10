@@ -6,7 +6,7 @@ class SuiteRunner
     @_processExamples(initialPath, suite.GetExamples())
     @_processNouns(initialPath, suite.GetNouns())
 
-  _processExample: (initialPath, example) => @_pushExampleDatum(@_getExampleWrappers(), (pathItem for pathItem in initialPath), example)
+  _processExample: (initialPath, example) => @_getExampleWrappers().push(new SuiteRunner.ExampleWrapper((pathItem for pathItem in initialPath), example))
 
   _processExamples: (initialPath, examples) => @_processExample(initialPath, example) for example in examples
 
@@ -17,12 +17,6 @@ class SuiteRunner
     @_processNouns(initialPath, noun.GetNouns())
 
   _processNouns: (initialPath, nouns) => @_processNoun(initialPath, noun) for noun in nouns
-
-  _pushExampleDatum: (exampleWrappers, path, example) =>
-    exampleWrappers.push(new SuiteRunner.ExampleWrapper(
-      path
-      example
-    ))
 
   ## Public Instance Methods
 
