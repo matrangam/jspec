@@ -5,10 +5,9 @@
   "author": "Daniel Pehrson",
   "readmeFilename": "README.md",
   "devDependencies": {
+    "coffee-script": "~1.6.3",
     "grunt": "~0.4.1",
-    "grunt-coffeelint": "0.0.7",
     "grunt-contrib-clean": "~0.5.0",
-    "grunt-contrib-coffee": "~0.7.0",
     "grunt-contrib-compass": "~0.5.0",
     "grunt-contrib-connect": "~0.5.0",
     "grunt-contrib-jshint": "~0.6.4",
