@@ -2,29 +2,21 @@ class SuiteRunner
   ## Constructor
 
   constructor: (suite) ->
-    @_exampleData = []
-
     initialPath = [suite]
-    @_processExamples(initialPath, suite.GetExamples())
-    @_processNouns(initialPath, suite.GetNouns())
+    @_processExamples(@_getExampleWrappers(), initialPath, suite.GetExamples())
+    @_processNouns(@_getExampleWrappers(), initialPath, suite.GetNouns())
 
-  _processExample: (initialPath, example) => @_pushExampleDatum(@_exampleData, (pathItem for pathItem in initialPath), example)
+  _processExample: (container, initialPath, example) => container.push(new SuiteRunner.ExampleWrapper(container.length.toString(), (pathItem for pathItem in initialPath), example))
 
-  _processExamples: (initialPath, examples) => @_processExample(initialPath, example) for example in examples
+  _processExamples: (container, initialPath, examples) => @_processExample(container, initialPath, example) for example in examples
 
-  _processNoun: (initialPath, noun) =>
+  _processNoun: (container, initialPath, noun) =>
     initialPath = (pathItem for pathItem in initialPath)
     initialPath.push(noun)
-    @_processExamples(initialPath, noun.GetExamples())
-    @_processNouns(initialPath, noun.GetNouns())
+    @_processExamples(container, initialPath, noun.GetExamples())
+    @_processNouns(container, initialPath, noun.GetNouns())
 
-  _processNouns: (initialPath, nouns) => @_processNoun(initialPath, noun) for noun in nouns
-
-  _pushExampleDatum: (exampleData, path, example) =>
-    exampleData.push(
-      path: path
-      example: example
-    )
+  _processNouns: (container, initialPath, nouns) => @_processNoun(container, initialPath, noun) for noun in nouns
 
   ## Public Instance Methods
 
@@ -33,35 +25,87 @@ class SuiteRunner
 
     handleExampleFailure = (error) => error
 
-    buildExamplePromise = (exampleDatum, i) =>
+    buildExamplePromise = (exampleWrapper) =>
       Q
         .resolve(null)
-        .then(() => exampleDatum.example.Execute(new ExampleEnvironment()))
+        .then(() => exampleWrapper.SetStatus(SuiteRunner.ExampleWrapper.STATUS.EXECUTING))
+        .then(() => exampleWrapper.GetExample().Execute(new ExampleEnvironment()))
         .fail(handleExampleFailure)
         .then((ret) =>
-          result = switch
-            when ret instanceof ExpectationError
-              value: ret.GetMessage()
-              passed: false
-            when ret instanceof PendingExampleError
-              value: ret.GetMessage()
-              passed: null
-            when ret instanceof Error
-              value: ret.message
-              passed: false
-            else
-              value: null
-              passed: true
+          exampleWrapper.SetStatus(SuiteRunner.ExampleWrapper.STATUS.EXECUTED)
 
-          reporter.Report(i, result.passed, result.value)
+          switch
+            when ret instanceof ExpectationError
+              exampleWrapper.SetMessage(ret.GetMessage())
+              exampleWrapper.SetResult(SuiteRunner.ExampleWrapper.RESULT.FAILED)
+            when ret instanceof PendingExampleError
+              exampleWrapper.SetMessage(ret.GetMessage())
+              exampleWrapper.SetResult(SuiteRunner.ExampleWrapper.RESULT.PENDING)
+            when ret instanceof Error
+              exampleWrapper.SetMessage(ret.message)
+              exampleWrapper.SetResult(SuiteRunner.ExampleWrapper.RESULT.FAILED)
+            else
+              exampleWrapper.SetResult(SuiteRunner.ExampleWrapper.RESULT.PASSED)
+
+          reporter.Report(exampleWrapper.GetId())
         )
 
-    reporter.Initialize(@_getExampleData(), startTime)
+    reporter.Initialize(@_getExampleWrappers(), startTime)
 
     Q
-      .allSettled(buildExamplePromise(exampleDatum, i) for exampleDatum, i in @_getExampleData())
+      .allSettled(buildExamplePromise(exampleWrapper) for exampleWrapper in @_getExampleWrappers())
       .then((promises) => reporter.Finished(new Date().getTime()))
 
   ## Protected Instance Methods
 
-  _getExampleData: () => @_exampleData
+  _getExampleWrappers: () => @_exampleWrappers ?= []
+
+class SuiteRunner.ExampleWrapper
+  ## Constructor
+
+  constructor: (id, path, example) ->
+    @_example = example
+    @_id = id
+    @_path = path
+
+  ## Class Constants
+
+  @RESULT ?= {}
+  @RESULT.NONE = 0
+  @RESULT.PENDING = 1
+  @RESULT.FAILED = 2
+  @RESULT.PASSED = 3
+
+  @STATUS ?= {}
+  @STATUS.WAITING = 0
+  @STATUS.EXECUTING = 1
+  @STATUS.EXECUTED = 2
+
+  ## Public Instance Methods
+
+  GetExample: () => @_example
+
+  GetId: () => @_id
+
+  GetMessage: () => @_message
+
+  GetPath: () => @_path
+
+  GetResult: () => @_result
+
+  GetStatus: () => @_status
+
+  SetMessage: (newMessage) => @_message = newMessage
+
+  SetStatus: (newStatus) => @_status = newStatus
+
+  SetResult: (newResult) => @_result = newResult
+
+  ## Protected Instance Properties
+
+  _example: null
+  _id: null
+  _message: null
+  _path: null
+  _result: @RESULT.NONE
+  _status: @STATUS.WAITING

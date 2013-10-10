@@ -1,16 +1,20 @@
-class HtmlReporter
+class HtmlReporter extends Reporter
   ## Constructor
 
   constructor: ($, bodyElementOrSelector) ->
+    super()
+
     @$ = $
     @_bodyElement = @$(bodyElementOrSelector)
 
-  ## Public Instance Methods
+  ## Reporter Overrides
 
-  Initialize: (exampleData, startTime) =>
-    @_startTime = startTime
-    @_exampleData = exampleData
-    @_examples = (new HtmlReporter.Example(@$, exampleDatum) for exampleDatum in @_getExampleData())
+  _finished: (endTime) =>
+    @_updateTimeElapsedCountElement(endTime)
+
+  _initialize: () =>
+    for exampleWrapper in @_getExampleWrappers()
+      @_getExampleViews()[exampleWrapper.GetId()] = new HtmlReporter.ExampleView(@$, exampleWrapper)
 
     @_getBodyElement()
       .addClass("jspec")
@@ -32,57 +36,45 @@ class HtmlReporter
     @_updateFailedCount()
     @_updatePassedCount()
     @_updatePendingCount()
-    @_getTotalExamplesCountElement().text(@_getExampleData().length)
+    @_getTotalExamplesCountElement().text(@_getExampleWrappers().length)
 
-    @_getExampleListElement().append(@$("<li>").append(example.GetElement()) for example in @_getExamples())
+    @_getExampleListElement().append(@$("<li>").append(example.GetElement()) for id, example of @_getExampleViews())
 
-  Report: (id, passed, result) =>
-    example = @_getExample(id)
+  _report: (id) =>
+    exampleView = @_getExampleView(id)
 
-    example.Update(passed, result)
+    exampleView.Update()
 
-    @_completedCount++
     @_updateCompletedCount()
 
-    switch passed
-      when null
-        @_pendingCount++
+    switch exampleView.GetExampleWrapper().GetResult()
+      when SuiteRunner.ExampleWrapper.RESULT.PENDING
         @_updatePendingCount()
-      when true
-        @_passedCount++
+      when SuiteRunner.ExampleWrapper.RESULT.PASSED
         @_updatePassedCount()
-      when false
-        @_failedCount++
+      when SuiteRunner.ExampleWrapper.RESULT.FAILED
         @_updateFailedCount()
 
     @_updateTimeElapsedCountElement(new Date().getTime())
-
-  Finished: (endTime) =>
-    @_updateTimeElapsedCountElement(endTime)
 
   ## Protected Instance Properties
 
   $: null
   _bodyElement: null
-  _completedCount: 0
   _completedExamplesCountElement: null
   _completedExamplesElement: null
   _completedExamplesPercentElement: null
   _exampleListElement: null
-  _examples: null
-  _failedCount: 0
+  _exampleViews: null
   _failedExamplesCountElement: null
   _failedExamplesElement: null
   _failedExamplesPercentElement: null
-  _passedCount: 0
   _passedExamplesCountElement: null
   _passedExamplesElement: null
   _passedExamplesPercentElement: null
-  _pendingCount: 0
   _pendingExamplesCountElement: null
   _pendingExamplesElement: null
   _pendingExamplesPercentElement: null
-  _startTime: null
   _timeElapsedCountElement: null
   _timeElapsedElement: null
   _totalExamplesCountElement: null
@@ -106,13 +98,11 @@ class HtmlReporter
     @_completedExamplesPercentElement ?= $("<dd>")
       .addClass("percent")
 
-  _getExample: (index) => (@_getExamples()[index] ? null)
-
-  _getExampleData: () => @_exampleData
-
   _getExampleListElement: (index) => @_exampleListElement ?= $("<ol>")
 
-  _getExamples: () => @_examples
+  _getExampleView: (id) => (@_getExampleViews()[id] ? null)
+
+  _getExampleViews: () => @_exampleViews ?= {}
 
   _getFailedExamplesCountElement: () =>
     @_failedExamplesCountElement ?= @$("<dd>")
@@ -156,8 +146,6 @@ class HtmlReporter
     @_pendingExamplesPercentElement ?= $("<dd>")
       .addClass("percent")
 
-  _getStartTime: () => @_startTime
-
   _getTimeElapsedElement: () =>
     @_timeElapsedElement ?= @$("<dl>")
       .addClass("time-elapsed")
@@ -181,29 +169,33 @@ class HtmlReporter
         )
 
   _updateCompletedCount: () =>
-    @_getCompletedExamplesCountElement().text(@_completedCount)
-    @_getCompletedExamplesPercentElement().text("#{(@_completedCount / @_getExampleData().length * 100)}%")
+    completedCount = (null for id, exampleView of @_getExampleViews() when exampleView.GetExampleWrapper().GetStatus() is SuiteRunner.ExampleWrapper.STATUS.EXECUTED).length
+    @_getCompletedExamplesCountElement().text(completedCount)
+    @_getCompletedExamplesPercentElement().text("#{(completedCount / @_getExampleWrappers().length * 100)}%")
 
   _updateFailedCount: () =>
-    @_getFailedExamplesCountElement().text(@_failedCount)
-    @_getFailedExamplesPercentElement().text("#{(@_failedCount / @_getExampleData().length * 100)}%")
+    failedCount = (null for id, exampleView of @_getExampleViews() when exampleView.GetExampleWrapper().GetResult() is SuiteRunner.ExampleWrapper.RESULT.FAILED).length
+    @_getFailedExamplesCountElement().text(failedCount)
+    @_getFailedExamplesPercentElement().text("#{(failedCount / @_getExampleWrappers().length * 100)}%")
 
   _updatePassedCount: () =>
-    @_getPassedExamplesCountElement().text(@_passedCount)
-    @_getPassedExamplesPercentElement().text("#{(@_passedCount / @_getExampleData().length * 100)}%")
+    passedCount = (null for id, exampleView of @_getExampleViews() when exampleView.GetExampleWrapper().GetResult() is SuiteRunner.ExampleWrapper.RESULT.PASSED).length
+    @_getPassedExamplesCountElement().text(passedCount)
+    @_getPassedExamplesPercentElement().text("#{(passedCount / @_getExampleWrappers().length * 100)}%")
 
   _updatePendingCount: () =>
-    @_getPendingExamplesCountElement().text(@_pendingCount)
-    @_getPendingExamplesPercentElement().text("#{(@_pendingCount / @_getExampleData().length * 100)}%")
+    pendingCount = (null for id, exampleView of @_getExampleViews() when exampleView.GetExampleWrapper().GetResult() is SuiteRunner.ExampleWrapper.RESULT.PENDING).length
+    @_getPendingExamplesCountElement().text(pendingCount)
+    @_getPendingExamplesPercentElement().text("#{(pendingCount / @_getExampleWrappers().length * 100)}%")
 
   _updateTimeElapsedCountElement: (endTime) => @_getTimeElapsedCountElement().text("#{endTime - @_getStartTime()}ms")
 
-class HtmlReporter.Example
+class HtmlReporter.ExampleView
   ## Constructor
 
-  constructor: ($, exampleDatum) ->
+  constructor: ($, exampleWrapper) ->
     @$ = $
-    @_exampleDatum = exampleDatum
+    @_exampleWrapper = exampleWrapper
 
   ## Public Instance Methods
 
@@ -213,20 +205,22 @@ class HtmlReporter.Example
       .append(@_getDescriptionElement())
       .append(@_getResultElement())
 
-  Update: (passed, result) =>
+  GetExampleWrapper: () => @_exampleWrapper
+
+  Update: () =>
     @_getIconElement().html(
-      switch passed
-        when null then "*"
-        when true then "+"
-        when false then "-"
+      switch @GetExampleWrapper().GetResult()
+        when SuiteRunner.ExampleWrapper.RESULT.PENDING then "*"
+        when SuiteRunner.ExampleWrapper.RESULT.PASSED then "+"
+        when SuiteRunner.ExampleWrapper.RESULT.FAILED then "-"
     )
-    @_getResultElement().text(result ? "")
+    @_getResultElement().text(@GetExampleWrapper().GetMessage() ? "")
 
   ## Protected Instance Properties
 
   _descriptionElement: null
   _element: null
-  _exampleDatum: null
+  _exampleWrapper: null
   _resultElement: null
   _iconElement: null
 
@@ -235,20 +229,20 @@ class HtmlReporter.Example
   _buildDescription: () =>
     [
       (
-        for pathItem in @_getExampleDatum().path
+        for pathItem in @_getExampleWrapper().GetPath()
           switch
             when pathItem instanceof Noun then pathItem.GetName()
             when pathItem instanceof Suite then pathItem.GetName()
             else pathItem
       ).join("/")
-      @_getExampleDatum().example.GetDescription()
+      @_getExampleWrapper().GetExample().GetDescription()
     ].join(" ")
 
   _getDescriptionElement: () =>
     @_descriptionElement ?= @$("<span>")
       .text(@_buildDescription())
 
-  _getExampleDatum: () => @_exampleDatum
+  _getExampleWrapper: () => @_exampleWrapper
 
   _getIconElement: () =>
     @_iconElement ?= @$("<span>")
