@@ -3,20 +3,20 @@ class SuiteRunner
 
   constructor: (suite) ->
     initialPath = [suite]
-    @_processExamples(initialPath, suite.GetExamples())
-    @_processNouns(initialPath, suite.GetNouns())
+    @_processExamples(@_getExampleWrappers(), initialPath, suite.GetExamples())
+    @_processNouns(@_getExampleWrappers(), initialPath, suite.GetNouns())
 
-  _processExample: (initialPath, example) => @_getExampleWrappers().push(new SuiteRunner.ExampleWrapper((pathItem for pathItem in initialPath), example))
+  _processExample: (container, initialPath, example) => container.push(new SuiteRunner.ExampleWrapper((pathItem for pathItem in initialPath), example))
 
-  _processExamples: (initialPath, examples) => @_processExample(initialPath, example) for example in examples
+  _processExamples: (container, initialPath, examples) => @_processExample(container, initialPath, example) for example in examples
 
-  _processNoun: (initialPath, noun) =>
+  _processNoun: (container, initialPath, noun) =>
     initialPath = (pathItem for pathItem in initialPath)
     initialPath.push(noun)
-    @_processExamples(initialPath, noun.GetExamples())
-    @_processNouns(initialPath, noun.GetNouns())
+    @_processExamples(container, initialPath, noun.GetExamples())
+    @_processNouns(container, initialPath, noun.GetNouns())
 
-  _processNouns: (initialPath, nouns) => @_processNoun(initialPath, noun) for noun in nouns
+  _processNouns: (container, initialPath, nouns) => @_processNoun(container, initialPath, noun) for noun in nouns
 
   ## Public Instance Methods
 
