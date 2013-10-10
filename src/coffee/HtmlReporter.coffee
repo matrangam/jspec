@@ -13,7 +13,8 @@ class HtmlReporter extends Reporter
     @_updateTimeElapsedCountElement(endTime)
 
   _initialize: () =>
-    @_exampleWrappers = (new HtmlReporter.Example(@$, exampleWrapper) for exampleWrapper in @_getExampleWrappers())
+    for exampleWrapper in @_getExampleWrappers()
+      @_getExampleViews()[exampleWrapper.GetId()] = new HtmlReporter.ExampleView(@$, exampleWrapper)
 
     @_getBodyElement()
       .addClass("jspec")
@@ -37,12 +38,12 @@ class HtmlReporter extends Reporter
     @_updatePendingCount()
     @_getTotalExamplesCountElement().text(@_getExampleWrappers().length)
 
-    @_getExampleListElement().append(@$("<li>").append(example.GetElement()) for example in @_getExampleWrappers())
+    @_getExampleListElement().append(@$("<li>").append(example.GetElement()) for id, example of @_getExampleViews())
 
   _report: (id, passed, result) =>
-    example = @_getExampleWrapper(id)
+    exampleView = @_getExampleView(id)
 
-    example.Update(passed, result)
+    exampleView.Update(passed, result)
 
     @_completedCount++
     @_updateCompletedCount()
@@ -69,7 +70,7 @@ class HtmlReporter extends Reporter
   _completedExamplesElement: null
   _completedExamplesPercentElement: null
   _exampleListElement: null
-  _exampleWrappers: null
+  _exampleViews: null
   _failedCount: 0
   _failedExamplesCountElement: null
   _failedExamplesElement: null
@@ -107,9 +108,9 @@ class HtmlReporter extends Reporter
 
   _getExampleListElement: (index) => @_exampleListElement ?= $("<ol>")
 
-  _getExampleWrapper: (index) => (@_getExampleWrappers()[index] ? null)
+  _getExampleView: (id) => (@_getExampleViews()[id] ? null)
 
-  _getExampleWrappers: () => @_exampleWrappers
+  _getExampleViews: () => @_exampleViews ?= {}
 
   _getFailedExamplesCountElement: () =>
     @_failedExamplesCountElement ?= @$("<dd>")
@@ -193,7 +194,7 @@ class HtmlReporter extends Reporter
 
   _updateTimeElapsedCountElement: (endTime) => @_getTimeElapsedCountElement().text("#{endTime - @_getStartTime()}ms")
 
-class HtmlReporter.Example
+class HtmlReporter.ExampleView
   ## Constructor
 
   constructor: ($, exampleWrapper) ->
