@@ -4,9 +4,9 @@ class Reporter
   Finished: (endTime) =>
     @_finished(endTime)
 
-  Initialize: (exampleData, startTime) =>
+  Initialize: (exampleWrappers, startTime) =>
     @_startTime = startTime
-    @_exampleData = exampleData
+    @_exampleWrappers = exampleWrappers
 
     @_initialize()
 
@@ -25,12 +25,12 @@ class Reporter
 
   ## Protected Instance Properties
 
-  _exampleData: null
+  _exampleWrappers: null
 
   _startTime: null
 
   ## Protected Instance Methods
 
-  _getExampleData: () => @_exampleData
+  _getExampleWrappers: () => @_exampleWrappers
 
   _getStartTime: () => @_startTime

@@ -13,7 +13,7 @@ class HtmlReporter extends Reporter
     @_updateTimeElapsedCountElement(endTime)
 
   _initialize: () =>
-    @_examples = (new HtmlReporter.Example(@$, exampleDatum) for exampleDatum in @_getExampleData())
+    @_exampleWrappers = (new HtmlReporter.Example(@$, exampleWrapper) for exampleWrapper in @_getExampleWrappers())
 
     @_getBodyElement()
       .addClass("jspec")
@@ -35,12 +35,12 @@ class HtmlReporter extends Reporter
     @_updateFailedCount()
     @_updatePassedCount()
     @_updatePendingCount()
-    @_getTotalExamplesCountElement().text(@_getExampleData().length)
+    @_getTotalExamplesCountElement().text(@_getExampleWrappers().length)
 
-    @_getExampleListElement().append(@$("<li>").append(example.GetElement()) for example in @_getExamples())
+    @_getExampleListElement().append(@$("<li>").append(example.GetElement()) for example in @_getExampleWrappers())
 
   _report: (id, passed, result) =>
-    example = @_getExample(id)
+    example = @_getExampleWrapper(id)
 
     example.Update(passed, result)
 
@@ -69,7 +69,7 @@ class HtmlReporter extends Reporter
   _completedExamplesElement: null
   _completedExamplesPercentElement: null
   _exampleListElement: null
-  _examples: null
+  _exampleWrappers: null
   _failedCount: 0
   _failedExamplesCountElement: null
   _failedExamplesElement: null
@@ -105,11 +105,11 @@ class HtmlReporter extends Reporter
     @_completedExamplesPercentElement ?= $("<dd>")
       .addClass("percent")
 
-  _getExample: (index) => (@_getExamples()[index] ? null)
-
   _getExampleListElement: (index) => @_exampleListElement ?= $("<ol>")
 
-  _getExamples: () => @_examples
+  _getExampleWrapper: (index) => (@_getExampleWrappers()[index] ? null)
+
+  _getExampleWrappers: () => @_exampleWrappers
 
   _getFailedExamplesCountElement: () =>
     @_failedExamplesCountElement ?= @$("<dd>")
@@ -177,28 +177,28 @@ class HtmlReporter extends Reporter
 
   _updateCompletedCount: () =>
     @_getCompletedExamplesCountElement().text(@_completedCount)
-    @_getCompletedExamplesPercentElement().text("#{(@_completedCount / @_getExampleData().length * 100)}%")
+    @_getCompletedExamplesPercentElement().text("#{(@_completedCount / @_getExampleWrappers().length * 100)}%")
 
   _updateFailedCount: () =>
     @_getFailedExamplesCountElement().text(@_failedCount)
-    @_getFailedExamplesPercentElement().text("#{(@_failedCount / @_getExampleData().length * 100)}%")
+    @_getFailedExamplesPercentElement().text("#{(@_failedCount / @_getExampleWrappers().length * 100)}%")
 
   _updatePassedCount: () =>
     @_getPassedExamplesCountElement().text(@_passedCount)
-    @_getPassedExamplesPercentElement().text("#{(@_passedCount / @_getExampleData().length * 100)}%")
+    @_getPassedExamplesPercentElement().text("#{(@_passedCount / @_getExampleWrappers().length * 100)}%")
 
   _updatePendingCount: () =>
     @_getPendingExamplesCountElement().text(@_pendingCount)
-    @_getPendingExamplesPercentElement().text("#{(@_pendingCount / @_getExampleData().length * 100)}%")
+    @_getPendingExamplesPercentElement().text("#{(@_pendingCount / @_getExampleWrappers().length * 100)}%")
 
   _updateTimeElapsedCountElement: (endTime) => @_getTimeElapsedCountElement().text("#{endTime - @_getStartTime()}ms")
 
 class HtmlReporter.Example
   ## Constructor
 
-  constructor: ($, exampleDatum) ->
+  constructor: ($, exampleWrapper) ->
     @$ = $
-    @_exampleDatum = exampleDatum
+    @_exampleWrapper = exampleWrapper
 
   ## Public Instance Methods
 
@@ -221,7 +221,7 @@ class HtmlReporter.Example
 
   _descriptionElement: null
   _element: null
-  _exampleDatum: null
+  _exampleWrapper: null
   _resultElement: null
   _iconElement: null
 
@@ -230,20 +230,20 @@ class HtmlReporter.Example
   _buildDescription: () =>
     [
       (
-        for pathItem in @_getExampleDatum().GetPath()
+        for pathItem in @_getExampleWrapper().GetPath()
           switch
             when pathItem instanceof Noun then pathItem.GetName()
             when pathItem instanceof Suite then pathItem.GetName()
             else pathItem
       ).join("/")
-      @_getExampleDatum().GetExample().GetDescription()
+      @_getExampleWrapper().GetExample().GetDescription()
     ].join(" ")
 
   _getDescriptionElement: () =>
     @_descriptionElement ?= @$("<span>")
       .text(@_buildDescription())
 
-  _getExampleDatum: () => @_exampleDatum
+  _getExampleWrapper: () => @_exampleWrapper
 
   _getIconElement: () =>
     @_iconElement ?= @$("<span>")
