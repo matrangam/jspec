@@ -12,8 +12,8 @@ class Reporter
 
   ## Public Instance Methods
 
-  Report: (id, passed, result) =>
-    @_report(id, passed, result)
+  Report: (id) =>
+    @_report(id)
 
   ## Overridable Protected Instance Methods
 
@@ -21,7 +21,7 @@ class Reporter
 
   _initialize: () => null
 
-  _report: (id, passed, result) => null
+  _report: (id) => null
 
   ## Protected Instance Properties
 

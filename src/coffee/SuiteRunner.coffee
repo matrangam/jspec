@@ -28,24 +28,25 @@ class SuiteRunner
     buildExamplePromise = (exampleWrapper) =>
       Q
         .resolve(null)
+        .then(() => exampleWrapper.SetStatus(SuiteRunner.ExampleWrapper.STATUS.EXECUTING))
         .then(() => exampleWrapper.GetExample().Execute(new ExampleEnvironment()))
+        .then(() => exampleWrapper.SetStatus(SuiteRunner.ExampleWrapper.STATUS.EXECUTED))
         .fail(handleExampleFailure)
         .then((ret) =>
-          result = switch
+          switch
             when ret instanceof ExpectationError
-              value: ret.GetMessage()
-              passed: false
+              exampleWrapper.SetMessage(ret.GetMessage())
+              exampleWrapper.SetResult(SuiteRunner.ExampleWrapper.RESULT.FAILED)
             when ret instanceof PendingExampleError
-              value: ret.GetMessage()
-              passed: null
+              exampleWrapper.SetMessage(ret.GetMessage())
+              exampleWrapper.SetResult(SuiteRunner.ExampleWrapper.RESULT.PENDING)
             when ret instanceof Error
-              value: ret.message
-              passed: false
+              exampleWrapper.SetMessage(ret.message)
+              exampleWrapper.SetResult(SuiteRunner.ExampleWrapper.RESULT.FAILED)
             else
-              value: null
-              passed: true
+              exampleWrapper.SetResult(SuiteRunner.ExampleWrapper.RESULT.PASSED)
 
-          reporter.Report(exampleWrapper.GetId(), result.passed, result.value)
+          reporter.Report(exampleWrapper.GetId())
         )
 
     reporter.Initialize(@_getExampleWrappers(), startTime)
@@ -68,12 +69,16 @@ class SuiteRunner.ExampleWrapper
 
   ## Class Constants
 
+  @RESULT ?= {}
+  @RESULT.NONE = 0
+  @RESULT.PENDING = 1
+  @RESULT.FAILED = 2
+  @RESULT.PASSED = 3
+
   @STATUS ?= {}
   @STATUS.WAITING = 0
-  @STATUS.RUNNING = 1
-  @STATUS.PENDING = 2
-  @STATUS.FAILED = 3
-  @STATUS.SUCCEEDED = 4
+  @STATUS.EXECUTING = 1
+  @STATUS.EXECUTED = 2
 
   ## Public Instance Methods
 
@@ -81,13 +86,25 @@ class SuiteRunner.ExampleWrapper
 
   GetId: () => @_id
 
+  GetMessage: () => @_message
+
   GetPath: () => @_path
 
+  GetResult: () => @_result
+
   GetStatus: () => @_status
+
+  SetMessage: (newMessage) => @_message = newMessage
+
+  SetStatus: (newStatus) => @_status = newStatus
+
+  SetResult: (newResult) => @_result = newResult
 
   ## Protected Instance Properties
 
   _example: null
   _id: null
+  _message: null
   _path: null
+  _result: @RESULT.NONE
   _status: @STATUS.WAITING

@@ -40,22 +40,22 @@ class HtmlReporter extends Reporter
 
     @_getExampleListElement().append(@$("<li>").append(example.GetElement()) for id, example of @_getExampleViews())
 
-  _report: (id, passed, result) =>
+  _report: (id) =>
     exampleView = @_getExampleView(id)
 
-    exampleView.Update(passed, result)
+    exampleView.Update()
 
     @_completedCount++
     @_updateCompletedCount()
 
-    switch passed
-      when null
+    switch exampleView.GetExampleWrapper().GetResult()
+      when SuiteRunner.ExampleWrapper.RESULT.PENDING
         @_pendingCount++
         @_updatePendingCount()
-      when true
+      when SuiteRunner.ExampleWrapper.RESULT.PASSED
         @_passedCount++
         @_updatePassedCount()
-      when false
+      when SuiteRunner.ExampleWrapper.RESULT.FAILED
         @_failedCount++
         @_updateFailedCount()
 
@@ -209,14 +209,16 @@ class HtmlReporter.ExampleView
       .append(@_getDescriptionElement())
       .append(@_getResultElement())
 
-  Update: (passed, result) =>
+  GetExampleWrapper: () => @_exampleWrapper
+
+  Update: () =>
     @_getIconElement().html(
-      switch passed
-        when null then "*"
-        when true then "+"
-        when false then "-"
+      switch @GetExampleWrapper().GetResult()
+        when SuiteRunner.ExampleWrapper.RESULT.PENDING then "*"
+        when SuiteRunner.ExampleWrapper.RESULT.PASSED then "+"
+        when SuiteRunner.ExampleWrapper.RESULT.FAILED then "-"
     )
-    @_getResultElement().text(result ? "")
+    @_getResultElement().text(@GetExampleWrapper().GetMessage() ? "")
 
   ## Protected Instance Properties
 
