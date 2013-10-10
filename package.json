@@ -14,6 +14,14 @@
       "url": "http://danielpehrson.com/"
     }
   ],
+  "homepage": "http://github.com/dpehrson/jspec",
+  "bugs": {
+    "url": "http://github.com/dpehrson/jspec/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dpehrson/jspec.git"
+  },
   "keywords": [
     "tdd",
     "tdd",
