@@ -69,12 +69,19 @@ module.exports = (grunt) ->
         command: "bin/jspec"
 
     watch:
-      coffee:
+      spec:
         files: [
           "spec/coffee/**/*.coffee"
+        ]
+        tasks: ["rig:spec", "jshint:spec"]
+        options:
+          spawn: false
+
+      src:
+        files: [
           "src/coffee/**/*.coffee"
         ]
-        tasks: ["rig", "jshint"]
+        tasks: ["rig:src", "jshint:src"]
         options:
           spawn: false
 
