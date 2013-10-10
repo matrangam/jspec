@@ -27,6 +27,7 @@
 
   #= Reporter.coffee
   #= HtmlReporter.coffee
+  #= TerminalReporter.coffee
 
   @jspec =
     Example: Example
@@ -36,6 +37,7 @@
     HtmlReporter: HtmlReporter
     PendingExampleError: PendingExampleError
     Suite: Suite
+    TerminalReporter: TerminalReporter
 
   @jspec
 )
