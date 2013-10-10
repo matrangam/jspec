@@ -2,7 +2,26 @@
   "name": "jspec",
   "version": "0.0.0",
   "description": "An RSpec-style testing library for JavaScript projects.",
-  "author": "Daniel Pehrson",
+  "author": {
+    "name": "Daniel Pehrson",
+    "email": "dpehrson@qurve.com",
+    "url": "http://danielpehrson.com/"
+  },
+  "contributors": [
+    {
+      "name": "Daniel Pehrson",
+      "email": "dpehrson@qurve.com",
+      "url": "http://danielpehrson.com/"
+    }
+  ],
+  "keywords": [
+    "tdd",
+    "tdd",
+    "testing",
+    "unit",
+    "behavior",
+    "driven"
+  ],
   "readmeFilename": "README.md",
   "devDependencies": {
     "coffee-script": "~1.6.3",
