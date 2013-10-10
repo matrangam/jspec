@@ -1,4 +1,7 @@
 module.exports = (grunt) ->
+  jspecLatestFile = "jspec-latest.js"
+  jspecSuiteLatestFile = "jspecSuite-latest.js"
+
   grunt.loadNpmTasks("grunt-contrib-clean")
   grunt.loadNpmTasks("grunt-contrib-compass")
   grunt.loadNpmTasks("grunt-contrib-connect")
@@ -47,16 +50,16 @@ module.exports = (grunt) ->
         "-W004": true # <class name> is already defined.
         "-W041": true # Use '===' to compare with 'null'.
         "-W088": true # Creating global 'for' variable. Should be 'for (var id ...'.
-      spec: ["spec/js/jspecSuite-latest.js"]
-      src: ["src/js/jspec-latest.js"]
+      spec: ["spec/js/#{jspecSuiteLatestFile}"]
+      src: ["src/js/#{jspecLatestFile}"]
 
     rig:
       spec:
         src: "spec/coffee/jspecSuite.coffee"
-        dest: "spec/js/jspecSuite-latest.js"
+        dest: "spec/js/#{jspecSuiteLatestFile}"
       src:
         src: "src/coffee/jspec.coffee"
-        dest: "src/js/jspec-latest.js"
+        dest: "src/js/#{jspecLatestFile}"
 
     shell:
       spec:
