@@ -6,7 +6,7 @@ class SuiteRunner
     @_processExamples(@_getExampleWrappers(), initialPath, suite.GetExamples())
     @_processNouns(@_getExampleWrappers(), initialPath, suite.GetNouns())
 
-  _processExample: (container, initialPath, example) => container.push(new SuiteRunner.ExampleWrapper((pathItem for pathItem in initialPath), example))
+  _processExample: (container, initialPath, example) => container.push(new SuiteRunner.ExampleWrapper(container.length.toString(), (pathItem for pathItem in initialPath), example))
 
   _processExamples: (container, initialPath, examples) => @_processExample(container, initialPath, example) for example in examples
 
@@ -25,10 +25,10 @@ class SuiteRunner
 
     handleExampleFailure = (error) => error
 
-    buildExamplePromise = (exampleDatum, i) =>
+    buildExamplePromise = (exampleWrapper) =>
       Q
         .resolve(null)
-        .then(() => exampleDatum.GetExample().Execute(new ExampleEnvironment()))
+        .then(() => exampleWrapper.GetExample().Execute(new ExampleEnvironment()))
         .fail(handleExampleFailure)
         .then((ret) =>
           result = switch
@@ -45,13 +45,13 @@ class SuiteRunner
               value: null
               passed: true
 
-          reporter.Report(i, result.passed, result.value)
+          reporter.Report(exampleWrapper.GetId(), result.passed, result.value)
         )
 
     reporter.Initialize(@_getExampleWrappers(), startTime)
 
     Q
-      .allSettled(buildExamplePromise(exampleDatum, i) for exampleDatum, i in @_getExampleWrappers())
+      .allSettled(buildExamplePromise(exampleWrapper) for exampleWrapper in @_getExampleWrappers())
       .then((promises) => reporter.Finished(new Date().getTime()))
 
   ## Protected Instance Methods
@@ -61,9 +61,10 @@ class SuiteRunner
 class SuiteRunner.ExampleWrapper
   ## Constructor
 
-  constructor: (path, example) ->
-    @_path = path
+  constructor: (id, path, example) ->
     @_example = example
+    @_id = id
+    @_path = path
 
   ## Class Constants
 
@@ -78,6 +79,8 @@ class SuiteRunner.ExampleWrapper
 
   GetExample: () => @_example
 
+  GetId: () => @_id
+
   GetPath: () => @_path
 
   GetStatus: () => @_status
@@ -85,5 +88,6 @@ class SuiteRunner.ExampleWrapper
   ## Protected Instance Properties
 
   _example: null
+  _id: null
   _path: null
   _status: @STATUS.WAITING
