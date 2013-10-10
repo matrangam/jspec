@@ -31,6 +31,9 @@
     "driven"
   ],
   "readmeFilename": "README.md",
+  "dependencies": {
+    "q": "~0.9.7"
+  },
   "devDependencies": {
     "coffee-script": "~1.6.3",
     "grunt": "~0.4.1",
