@@ -95,11 +95,17 @@ class SuiteRunner.ExampleWrapper
 
   GetStatus: () => @_status
 
-  SetMessage: (newMessage) => @_message = newMessage
+  SetMessage: (newMessage) =>
+    @_message = newMessage
+    null
 
-  SetStatus: (newStatus) => @_status = newStatus
+  SetStatus: (newStatus) =>
+    @_status = newStatus
+    null
 
-  SetResult: (newResult) => @_result = newResult
+  SetResult: (newResult) =>
+    @_result = newResult
+    null
 
   ## Protected Instance Properties
 
