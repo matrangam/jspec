@@ -2,13 +2,11 @@ class SuiteRunner
   ## Constructor
 
   constructor: (suite) ->
-    @_exampleData = []
-
     initialPath = [suite]
     @_processExamples(initialPath, suite.GetExamples())
     @_processNouns(initialPath, suite.GetNouns())
 
-  _processExample: (initialPath, example) => @_pushExampleDatum(@_exampleData, (pathItem for pathItem in initialPath), example)
+  _processExample: (initialPath, example) => @_pushExampleDatum(@_getExampleWrappers(), (pathItem for pathItem in initialPath), example)
 
   _processExamples: (initialPath, examples) => @_processExample(initialPath, example) for example in examples
 
@@ -20,15 +18,16 @@ class SuiteRunner
 
   _processNouns: (initialPath, nouns) => @_processNoun(initialPath, noun) for noun in nouns
 
-  _pushExampleDatum: (exampleData, path, example) =>
-    exampleData.push(
-      path: path
-      example: example
-    )
+  _pushExampleDatum: (exampleWrappers, path, example) =>
+    exampleWrappers.push(new SuiteRunner.ExampleWrapper(
+      path
+      example
+    ))
 
   ## Public Instance Methods
 
   Run: (reporter) =>
+    console.log(@_getExampleWrappers())
     startTime = new Date().getTime()
 
     handleExampleFailure = (error) => error
@@ -36,7 +35,7 @@ class SuiteRunner
     buildExamplePromise = (exampleDatum, i) =>
       Q
         .resolve(null)
-        .then(() => exampleDatum.example.Execute(new ExampleEnvironment()))
+        .then(() => exampleDatum.GetExample().Execute(new ExampleEnvironment()))
         .fail(handleExampleFailure)
         .then((ret) =>
           result = switch
@@ -56,12 +55,42 @@ class SuiteRunner
           reporter.Report(i, result.passed, result.value)
         )
 
-    reporter.Initialize(@_getExampleData(), startTime)
+    reporter.Initialize(@_getExampleWrappers(), startTime)
 
     Q
-      .allSettled(buildExamplePromise(exampleDatum, i) for exampleDatum, i in @_getExampleData())
+      .allSettled(buildExamplePromise(exampleDatum, i) for exampleDatum, i in @_getExampleWrappers())
       .then((promises) => reporter.Finished(new Date().getTime()))
 
   ## Protected Instance Methods
 
-  _getExampleData: () => @_exampleData
+  _getExampleWrappers: () => @_exampleWrappers ?= []
+
+class SuiteRunner.ExampleWrapper
+  ## Constructor
+
+  constructor: (path, example) ->
+    @_path = path
+    @_example = example
+
+  ## Class Constants
+
+  @STATUS ?= {}
+  @STATUS.WAITING = 0
+  @STATUS.RUNNING = 1
+  @STATUS.PENDING = 2
+  @STATUS.FAILED = 3
+  @STATUS.SUCCEEDED = 4
+
+  ## Public Instance Methods
+
+  GetExample: () => @_example
+
+  GetPath: () => @_path
+
+  GetStatus: () => @_status
+
+  ## Protected Instance Properties
+
+  _example: null
+  _path: null
+  _status: @STATUS.WAITING

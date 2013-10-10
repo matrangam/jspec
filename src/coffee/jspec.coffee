@@ -25,6 +25,7 @@
   #= SuiteBlockScope.coffee
   #= SuiteRunner.coffee
 
+  #= Reporter.coffee
   #= HtmlReporter.coffee
 
   @jspec =

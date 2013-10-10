@@ -1,15 +1,18 @@
-class HtmlReporter
+class HtmlReporter extends Reporter
   ## Constructor
 
   constructor: ($, bodyElementOrSelector) ->
+    super()
+
     @$ = $
     @_bodyElement = @$(bodyElementOrSelector)
 
-  ## Public Instance Methods
+  ## Reporter Overrides
 
-  Initialize: (exampleData, startTime) =>
-    @_startTime = startTime
-    @_exampleData = exampleData
+  _finished: (endTime) =>
+    @_updateTimeElapsedCountElement(endTime)
+
+  _initialize: () =>
     @_examples = (new HtmlReporter.Example(@$, exampleDatum) for exampleDatum in @_getExampleData())
 
     @_getBodyElement()
@@ -36,7 +39,7 @@ class HtmlReporter
 
     @_getExampleListElement().append(@$("<li>").append(example.GetElement()) for example in @_getExamples())
 
-  Report: (id, passed, result) =>
+  _report: (id, passed, result) =>
     example = @_getExample(id)
 
     example.Update(passed, result)
@@ -56,9 +59,6 @@ class HtmlReporter
         @_updateFailedCount()
 
     @_updateTimeElapsedCountElement(new Date().getTime())
-
-  Finished: (endTime) =>
-    @_updateTimeElapsedCountElement(endTime)
 
   ## Protected Instance Properties
 
@@ -82,7 +82,6 @@ class HtmlReporter
   _pendingExamplesCountElement: null
   _pendingExamplesElement: null
   _pendingExamplesPercentElement: null
-  _startTime: null
   _timeElapsedCountElement: null
   _timeElapsedElement: null
   _totalExamplesCountElement: null
@@ -107,8 +106,6 @@ class HtmlReporter
       .addClass("percent")
 
   _getExample: (index) => (@_getExamples()[index] ? null)
-
-  _getExampleData: () => @_exampleData
 
   _getExampleListElement: (index) => @_exampleListElement ?= $("<ol>")
 
@@ -155,8 +152,6 @@ class HtmlReporter
   _getPendingExamplesPercentElement: () =>
     @_pendingExamplesPercentElement ?= $("<dd>")
       .addClass("percent")
-
-  _getStartTime: () => @_startTime
 
   _getTimeElapsedElement: () =>
     @_timeElapsedElement ?= @$("<dl>")
@@ -235,13 +230,13 @@ class HtmlReporter.Example
   _buildDescription: () =>
     [
       (
-        for pathItem in @_getExampleDatum().path
+        for pathItem in @_getExampleDatum().GetPath()
           switch
             when pathItem instanceof Noun then pathItem.GetName()
             when pathItem instanceof Suite then pathItem.GetName()
             else pathItem
       ).join("/")
-      @_getExampleDatum().example.GetDescription()
+      @_getExampleDatum().GetExample().GetDescription()
     ].join(" ")
 
   _getDescriptionElement: () =>
