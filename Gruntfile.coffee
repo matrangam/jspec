@@ -43,6 +43,7 @@ module.exports = (grunt) ->
       options:
         "-W004": true # <class name> is already defined.
         "-W041": true # Use '===' to compare with 'null'.
+        "-W088": true # Creating global 'for' variable. Should be 'for (var id ...'.
       spec: ["spec/js/jspecSuite-latest.js"]
       src: ["src/js/jspec-latest.js"]
 
