@@ -1,3 +1,4 @@
+@import "compass/css3";
 @import "compass/reset";
 
 // Typography
@@ -53,15 +54,21 @@ body.jspec {
 
       > dd {
         margin: 0;
+        @include inline-block();
 
         &.percent {
           display: none;
+          margin-left: 0.5em;
 
           &:before {
             content: "(";
           }
           &:after {
             content: ")";
+          }
+
+          @include at-breakpoint($break-desktop) {
+            @include inline-block();
           }
         }
       }
