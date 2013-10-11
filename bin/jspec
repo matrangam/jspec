@@ -1,7 +1,15 @@
 #!/usr/bin/env node
 
-var Q = require("q");
+var path = require("path"),
+    nconf = require("nconf");
+
+nconf
+  .argv()
+  .env()
+  .file(path.join(process.cwd(), ".jspec"))
+;
+
 var jspec = require("../src/js/jspec-latest.js");
-var suite = require("../spec/js/jspecSuite-latest.js");
+var suite = require(path.join(process.cwd(), nconf.get("suite")));
 
 suite.Run(new jspec.TerminalReporter(process));
