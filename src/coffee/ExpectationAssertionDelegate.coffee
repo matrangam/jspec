@@ -10,6 +10,7 @@ class ExpectationAssertionDelegate
     @not.to.be.undefined = @NotToBeUndefined
     @not.to.throw = @NotToThrow
 
+    @to.be = @ToBe
     @to.be.false = @ToBeFalse
     @to.be.null = @ToBeNull
     @to.be.true = @ToBeTrue
@@ -26,6 +27,8 @@ class ExpectationAssertionDelegate
   NotToBeUndefined: () => @_getExpectation().NotToBeUndefined()
 
   NotToThrow: (unexpectedError = null) => @_getExpectation().NotToThrow(unexpectedError)
+
+  ToBe: (expectedValue) => @_getExpectation().ToBe(expectedValue)
 
   ToBeFalse: () => @_getExpectation().ToBeFalse()
 

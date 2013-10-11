@@ -10,6 +10,9 @@
 @method("NotToBeUndefined", () ->
   #= Expectation/NotToBeUndefined.spec.coffee
 )
+@method("ToBe", () ->
+  #= Expectation/ToBe.spec.coffee
+)
 @method("ToBeFalse", () ->
   #= Expectation/ToBeFalse.spec.coffee
 )
