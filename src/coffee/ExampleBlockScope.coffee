@@ -12,6 +12,8 @@ class ExampleBlockScope
 
   pending: (message) => throw new PendingExampleError(message)
 
+  promise: (block) => Q.resolve(block.apply(@))
+
   set: (name, block) =>
     @_getContext().RegisterVariableBlock(name, block)
     null
