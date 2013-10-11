@@ -46,7 +46,7 @@ class Expectation
     true
 
   ToBe: (expectedValue) =>
-    throw new ExpectationError("Expected #{@_getTestValue()} to equal #{expectedValue}") unless @_getTestValue() is expectedValue
+    throw new ExpectationError("Expected #{@_getTestValue()} to be #{expectedValue}") unless @_getTestValue() is expectedValue
     true
 
   ToBeFalse: () =>
