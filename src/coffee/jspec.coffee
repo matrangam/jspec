@@ -29,7 +29,7 @@
   #= HtmlReporter.coffee
   #= TerminalReporter.coffee
 
-  @jspec =
+  jspec =
     Example: Example
     ExampleEnvironment: ExampleEnvironment
     Expectation: Expectation
@@ -39,5 +39,5 @@
     Suite: Suite
     TerminalReporter: TerminalReporter
 
-  @jspec
+  jspec
 )
